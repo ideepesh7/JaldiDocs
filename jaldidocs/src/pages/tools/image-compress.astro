@@ -1,5 +1,6 @@
 ---
 // src/pages/tools/jpg-to-pdf.astro
+
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import ToolHeader from '../../components/ui/ToolHeader';
 import JpgToPdf from '../../components/tools/JpgToPdf';
@@ -8,26 +9,47 @@ import RelatedTools from '../../components/ui/RelatedTools';
 import AdSlot from '../../components/ui/AdSlot';
 import { TOOLS } from '../../data/tools';
 
+const siteUrl = 'https://jaldidocs.pages.dev';
+
 const faqs = [
-  { question: 'How many images can I convert at once?', answer: 'You can add as many images as you need. However, for best performance in the browser, keep the combined file size under 50MB. Very large image sets may be slow on older devices.' },
-  { question: 'Will image quality be reduced in the PDF?', answer: 'The tool converts images at 92% quality which is visually excellent for most uses. If you need lossless quality, use PNG format images as input.' },
-  { question: 'Can I reorder the images before converting?', answer: 'Yes. Use the up and down arrows next to each image to reorder them. The PDF pages will follow the same order as your image list.' },
-  { question: 'What page size should I use?', answer: 'A4 is the standard for India (office documents, resumes, applications). Use "Fit to image" if you want the PDF pages to exactly match each image\'s dimensions.' },
+  {
+    question: 'How many images can I convert at once?',
+    answer: 'You can add multiple images. For best performance, keep total size under 50MB.'
+  },
+  {
+    question: 'Will image quality be reduced?',
+    answer: 'No major quality loss. Images are optimized for best PDF balance.'
+  },
+  {
+    question: 'Can I reorder images?',
+    answer: 'Yes, drag or use arrows to reorder before conversion.'
+  },
+  {
+    question: 'Which page size should I use?',
+    answer: 'A4 is best for documents, Fit-to-image for exact size output.'
+  }
 ];
 
-const relatedTools = TOOLS.filter(t => ['merge-pdf', 'pdf-compressor', 'image-resize', 'image-compress'].includes(t.id));
+const relatedTools = TOOLS
+  ? TOOLS.filter(t =>
+      ['merge-pdf', 'pdf-compressor', 'image-resize', 'image-compress'].includes(t.id)
+    )
+  : [];
 ---
 
 <ToolLayout
-  title="JPG to PDF Converter Online Free - Images to PDF | JaldiDocs"
-  description="Convert multiple JPG, PNG and WEBP images into a single PDF file. Set page size, orientation and margin. Free, no upload, no signup — browser-based conversion."
+  title="JPG to PDF Converter Online Free | JaldiDocs"
+  description="Convert JPG, PNG, and WEBP images into a single PDF instantly in your browser. No upload, no signup, 100% free tool."
   canonical="/tools/jpg-to-pdf"
 >
   <ToolHeader
     client:load
-    name="JPG to PDF"
-    description="Convert one or multiple JPG, PNG or WEBP images into a single PDF. Upload images, reorder them, choose page size and orientation, then download your PDF."
-    breadcrumb={[{ label: 'PDF Tools', href: '/#pdf-tools' }, { label: 'JPG to PDF', href: '/tools/jpg-to-pdf' }]}
+    name="JPG to PDF Converter"
+    description="Convert images into a single PDF file directly in your browser. Fast, secure, and free."
+    breadcrumb={[
+      { label: 'PDF Tools', href: '/#pdf-tools' },
+      { label: 'JPG to PDF', href: '/tools/jpg-to-pdf' }
+    ]}
   />
 
   <JpgToPdf client:load />
@@ -36,40 +58,37 @@ const relatedTools = TOOLS.filter(t => ['merge-pdf', 'pdf-compressor', 'image-re
     <AdSlot client:load className="mb-10" />
 
     <div class="prose-tool mt-4">
-      <h2>Convert Images to PDF in Your Browser</h2>
+      <h2>Convert Images to PDF Online</h2>
       <p>
-        This tool converts JPG, PNG and WEBP images into a standard PDF file without uploading anything to
-        a server. It works entirely in your browser using modern web technology. This is ideal when you need
-        to submit multiple photos as a single document.
+        Convert JPG, PNG, and WEBP images into a single PDF file directly in your browser.
+        No uploads, no signup, completely private processing.
       </p>
 
-      <h2>Common Use Cases in India</h2>
+      <h2>Use Cases</h2>
       <ul>
-        <li>Combining marksheet photos and certificate photos for college admissions</li>
-        <li>Converting scanned documents into a single PDF for government portals</li>
-        <li>Submitting multiple ID proof photos as one document for bank KYC</li>
-        <li>Creating a photo album or presentation in PDF format</li>
-        <li>Combining property photos for a rental or sale document</li>
+        <li>College documents & marksheets</li>
+        <li>Bank KYC submissions</li>
+        <li>Government forms</li>
+        <li>Scanned documents merging</li>
       </ul>
 
-      <h2>How to Convert JPG to PDF</h2>
-      <ol class="list-decimal list-inside space-y-1.5 my-3 text-sm text-secondary">
-        <li>Click "Choose Files" or drag your images into the upload area</li>
-        <li>Use the arrows to reorder pages if needed</li>
-        <li>Choose page size (A4 is standard), orientation and margin</li>
-        <li>Click "Create PDF" — the download will start automatically</li>
+      <h2>Steps</h2>
+      <ol>
+        <li>Select images</li>
+        <li>Reorder if needed</li>
+        <li>Choose settings</li>
+        <li>Download PDF</li>
       </ol>
 
       <h2>Tips</h2>
       <ul>
-        <li>For official documents, use A4 portrait with a small or medium margin</li>
-        <li>Use "Fit to image" when you want the PDF to preserve the exact image proportions</li>
-        <li>If images are very large, compress them first using the Image Compress tool</li>
-        <li>PNG images preserve quality better but produce larger PDFs than JPG</li>
+        <li>Use A4 for official documents</li>
+        <li>Compress large images first</li>
+        <li>Use JPG for smaller file size</li>
       </ul>
     </div>
 
-    <FAQSection client:load faqs={faqs} title="JPG to PDF — FAQs" />
+    <FAQSection client:load faqs={faqs} title="FAQs - JPG to PDF" />
     <RelatedTools client:load tools={relatedTools} currentId="jpg-to-pdf" />
   </div>
 </ToolLayout>
