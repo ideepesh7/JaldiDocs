@@ -1,67 +1,75 @@
 ---
-// src/pages/tools/merge-pdf.astro
+// src/pages/tools/jpg-to-pdf.astro
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import ToolHeader from '../../components/ui/ToolHeader';
-import MergePdf from '../../components/tools/MergePdf';
+import JpgToPdf from '../../components/tools/JpgToPdf';
 import FAQSection from '../../components/ui/FAQSection';
 import RelatedTools from '../../components/ui/RelatedTools';
 import AdSlot from '../../components/ui/AdSlot';
 import { TOOLS } from '../../data/tools';
-import { MERGE_PDF_FAQS } from '../../data/faqs';
 
-const relatedTools = TOOLS.filter(t => ['jpg-to-pdf', 'pdf-compressor', 'image-resize', 'invoice-maker'].includes(t.id));
+const faqs = [
+  { question: 'How many images can I convert at once?', answer: 'You can add as many images as you need. However, for best performance in the browser, keep the combined file size under 50MB. Very large image sets may be slow on older devices.' },
+  { question: 'Will image quality be reduced in the PDF?', answer: 'The tool converts images at 92% quality which is visually excellent for most uses. If you need lossless quality, use PNG format images as input.' },
+  { question: 'Can I reorder the images before converting?', answer: 'Yes. Use the up and down arrows next to each image to reorder them. The PDF pages will follow the same order as your image list.' },
+  { question: 'What page size should I use?', answer: 'A4 is the standard for India (office documents, resumes, applications). Use "Fit to image" if you want the PDF pages to exactly match each image\'s dimensions.' },
+];
+
+const relatedTools = TOOLS.filter(t => ['merge-pdf', 'pdf-compressor', 'image-resize', 'image-compress'].includes(t.id));
 ---
 
 <ToolLayout
-  title="Merge PDF Files Online Free - Combine PDFs Without Upload | JaldiDocs"
-  description="Merge multiple PDF files into one PDF online for free. No signup, no server upload — PDFs are combined entirely in your browser using pdf-lib."
-  canonical="/tools/merge-pdf"
+  title="JPG to PDF Converter Online Free - Images to PDF | JaldiDocs"
+  description="Convert multiple JPG, PNG and WEBP images into a single PDF file. Set page size, orientation and margin. Free, no upload, no signup — browser-based conversion."
+  canonical="/tools/jpg-to-pdf"
 >
   <ToolHeader
     client:load
-    name="Merge PDF"
-    description="Combine multiple PDF files into one document. Upload, reorder, and merge PDFs entirely in your browser. Your files are never uploaded to any server."
-    breadcrumb={[{ label: 'PDF Tools', href: '/#pdf-tools' }, { label: 'Merge PDF', href: '/tools/merge-pdf' }]}
+    name="JPG to PDF"
+    description="Convert one or multiple JPG, PNG or WEBP images into a single PDF. Upload images, reorder them, choose page size and orientation, then download your PDF."
+    breadcrumb={[{ label: 'PDF Tools', href: '/#pdf-tools' }, { label: 'JPG to PDF', href: '/tools/jpg-to-pdf' }]}
   />
 
-  <MergePdf client:load />
+  <JpgToPdf client:load />
 
   <div slot="seo-content">
     <AdSlot client:load className="mb-10" />
 
     <div class="prose-tool mt-4">
-      <h2>Merge PDFs Without Uploading</h2>
+      <h2>Convert Images to PDF in Your Browser</h2>
       <p>
-        This tool merges your PDF files entirely in your browser. No file is sent to any server. This makes
-        it safe for combining sensitive documents such as salary slips, offer letters, ID proofs, or
-        financial statements.
+        This tool converts JPG, PNG and WEBP images into a standard PDF file without uploading anything to
+        a server. It works entirely in your browser using modern web technology. This is ideal when you need
+        to submit multiple photos as a single document.
       </p>
 
-      <h2>Common Use Cases</h2>
+      <h2>Common Use Cases in India</h2>
       <ul>
-        <li>Combining multiple salary slips into one PDF for a loan application</li>
-        <li>Merging an offer letter, ID proof and address proof for KYC</li>
-        <li>Combining multiple marksheets or certificates for college applications</li>
-        <li>Joining chapter-wise PDFs into a single study material document</li>
-        <li>Merging invoices for an accounting or audit document set</li>
+        <li>Combining marksheet photos and certificate photos for college admissions</li>
+        <li>Converting scanned documents into a single PDF for government portals</li>
+        <li>Submitting multiple ID proof photos as one document for bank KYC</li>
+        <li>Creating a photo album or presentation in PDF format</li>
+        <li>Combining property photos for a rental or sale document</li>
       </ul>
 
-      <h2>How to Merge PDFs</h2>
+      <h2>How to Convert JPG to PDF</h2>
       <ol class="list-decimal list-inside space-y-1.5 my-3 text-sm text-secondary">
-        <li>Upload all the PDF files you want to merge</li>
-        <li>Use the arrows to set the correct order of the PDFs</li>
-        <li>Click "Merge PDFs & Download" — the merged PDF downloads automatically</li>
+        <li>Click "Choose Files" or drag your images into the upload area</li>
+        <li>Use the arrows to reorder pages if needed</li>
+        <li>Choose page size (A4 is standard), orientation and margin</li>
+        <li>Click "Create PDF" — the download will start automatically</li>
       </ol>
 
-      <h2>Limitations</h2>
+      <h2>Tips</h2>
       <ul>
-        <li>Password-protected PDFs cannot be merged — remove the password first</li>
-        <li>Very large files (combined over 100MB) may be slow on older devices or slow connections</li>
-        <li>Some corrupted or non-standard PDF files may fail — use a standard PDF creator or printer driver to recreate the file if needed</li>
+        <li>For official documents, use A4 portrait with a small or medium margin</li>
+        <li>Use "Fit to image" when you want the PDF to preserve the exact image proportions</li>
+        <li>If images are very large, compress them first using the Image Compress tool</li>
+        <li>PNG images preserve quality better but produce larger PDFs than JPG</li>
       </ul>
     </div>
 
-    <FAQSection client:load faqs={MERGE_PDF_FAQS} title="Merge PDF — FAQs" />
-    <RelatedTools client:load tools={relatedTools} currentId="merge-pdf" />
+    <FAQSection client:load faqs={faqs} title="JPG to PDF — FAQs" />
+    <RelatedTools client:load tools={relatedTools} currentId="jpg-to-pdf" />
   </div>
 </ToolLayout>

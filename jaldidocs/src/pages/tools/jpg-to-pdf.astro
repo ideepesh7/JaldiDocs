@@ -9,67 +9,82 @@ import AdSlot from '../../components/ui/AdSlot';
 import { TOOLS } from '../../data/tools';
 
 const faqs = [
-  { question: 'How many images can I convert at once?', answer: 'You can add as many images as you need. However, for best performance in the browser, keep the combined file size under 50MB. Very large image sets may be slow on older devices.' },
-  { question: 'Will image quality be reduced in the PDF?', answer: 'The tool converts images at 92% quality which is visually excellent for most uses. If you need lossless quality, use PNG format images as input.' },
-  { question: 'Can I reorder the images before converting?', answer: 'Yes. Use the up and down arrows next to each image to reorder them. The PDF pages will follow the same order as your image list.' },
-  { question: 'What page size should I use?', answer: 'A4 is the standard for India (office documents, resumes, applications). Use "Fit to image" if you want the PDF pages to exactly match each image\'s dimensions.' },
+  { question: 'Is JPG to PDF tool free?', answer: 'Yes, this tool is completely free and works directly in your browser.' },
+  { question: 'Do I need to upload files?', answer: 'No uploads required. Everything works locally in your browser for privacy.' },
+  { question: 'Can I convert multiple images?', answer: 'Yes, you can convert multiple JPG, PNG, or WEBP images into one PDF.' },
+  { question: 'Is it safe for documents?', answer: 'Yes, files are not sent to any server, so it is fully secure.' },
 ];
 
-const relatedTools = TOOLS.filter(t => ['merge-pdf', 'pdf-compressor', 'image-resize', 'image-compress'].includes(t.id));
+const relatedTools = TOOLS.filter(t =>
+  ['merge-pdf', 'pdf-compressor', 'image-resize', 'image-compress'].includes(t.id)
+);
 ---
 
 <ToolLayout
-  title="JPG to PDF Converter Online Free - Images to PDF | JaldiDocs"
-  description="Convert multiple JPG, PNG and WEBP images into a single PDF file. Set page size, orientation and margin. Free, no upload, no signup — browser-based conversion."
+  title="JPG to PDF Converter Online Free | Convert Images to PDF - JaldiDocs"
+  description="Convert JPG, PNG and WEBP images to PDF online for free. No signup required. Fast, secure and works completely in your browser."
   canonical="/tools/jpg-to-pdf"
 >
   <ToolHeader
     client:load
-    name="JPG to PDF"
-    description="Convert one or multiple JPG, PNG or WEBP images into a single PDF. Upload images, reorder them, choose page size and orientation, then download your PDF."
-    breadcrumb={[{ label: 'PDF Tools', href: '/#pdf-tools' }, { label: 'JPG to PDF', href: '/tools/jpg-to-pdf' }]}
+    name="JPG to PDF Converter"
+    description="Convert multiple images (JPG, PNG, WEBP) into a single PDF file instantly. No upload, no signup."
+    breadcrumb={[
+      { label: 'PDF Tools', href: '/#pdf-tools' },
+      { label: 'JPG to PDF', href: '/tools/jpg-to-pdf' }
+    ]}
   />
 
   <JpgToPdf client:load />
 
   <div slot="seo-content">
+
     <AdSlot client:load className="mb-10" />
 
     <div class="prose-tool mt-4">
-      <h2>Convert Images to PDF in Your Browser</h2>
+
+      <h2>Free JPG to PDF Converter Online</h2>
       <p>
-        This tool converts JPG, PNG and WEBP images into a standard PDF file without uploading anything to
-        a server. It works entirely in your browser using modern web technology. This is ideal when you need
-        to submit multiple photos as a single document.
+        Convert your images into a single PDF file instantly. This tool supports JPG, PNG, and WEBP formats
+        and works completely in your browser without uploading files anywhere.
       </p>
 
-      <h2>Common Use Cases in India</h2>
+      <h2>Why Use This Tool?</h2>
       <ul>
-        <li>Combining marksheet photos and certificate photos for college admissions</li>
-        <li>Converting scanned documents into a single PDF for government portals</li>
-        <li>Submitting multiple ID proof photos as one document for bank KYC</li>
-        <li>Creating a photo album or presentation in PDF format</li>
-        <li>Combining property photos for a rental or sale document</li>
+        <li>100% free and browser-based</li>
+        <li>No file upload required</li>
+        <li>Fast and secure conversion</li>
+        <li>Works on mobile and desktop</li>
+        <li>Perfect for document submission</li>
       </ul>
 
-      <h2>How to Convert JPG to PDF</h2>
-      <ol class="list-decimal list-inside space-y-1.5 my-3 text-sm text-secondary">
-        <li>Click "Choose Files" or drag your images into the upload area</li>
-        <li>Use the arrows to reorder pages if needed</li>
-        <li>Choose page size (A4 is standard), orientation and margin</li>
-        <li>Click "Create PDF" — the download will start automatically</li>
+      <h2>Common Uses in India</h2>
+      <ul>
+        <li>Aadhaar, PAN, and KYC document submission</li>
+        <li>College admission form documents</li>
+        <li>Bank verification and applications</li>
+        <li>Government online submissions</li>
+      </ul>
+
+      <h2>How to Use</h2>
+      <ol>
+        <li>Upload JPG, PNG or WEBP images</li>
+        <li>Reorder images if needed</li>
+        <li>Click convert button</li>
+        <li>Download your PDF instantly</li>
       </ol>
 
-      <h2>Tips</h2>
+      <h2>Pro Tips</h2>
       <ul>
-        <li>For official documents, use A4 portrait with a small or medium margin</li>
-        <li>Use "Fit to image" when you want the PDF to preserve the exact image proportions</li>
-        <li>If images are very large, compress them first using the Image Compress tool</li>
-        <li>PNG images preserve quality better but produce larger PDFs than JPG</li>
+        <li>Use A4 format for official documents</li>
+        <li>Compress large images before converting</li>
+        <li>Use JPG for smaller file size PDFs</li>
       </ul>
+
     </div>
 
-    <FAQSection client:load faqs={faqs} title="JPG to PDF — FAQs" />
+    <FAQSection client:load faqs={faqs} title="Frequently Asked Questions" />
     <RelatedTools client:load tools={relatedTools} currentId="jpg-to-pdf" />
+
   </div>
 </ToolLayout>
