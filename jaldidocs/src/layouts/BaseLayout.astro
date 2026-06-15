@@ -32,6 +32,9 @@ const ogImg = `${siteUrl}/og-image.png`;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
+    <!-- ✅ Google Site Verification -->
+    <meta name="google-site-verification" content="rHA7BphxscKOlrUHdqJp53x4WuLnNbfPw0FGIyShMTE" />
+
     <title>{title}</title>
     <meta name="description" content={description} />
 
@@ -89,13 +92,13 @@ const ogImg = `${siteUrl}/og-image.png`;
       })}
     </script>
 
+    <!-- ADSENSE PLACEMENT -->
     <!--
-      ADSENSE PLACEMENT:
-      To add Google AdSense verification or script, insert here:
       <meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXXX" />
       <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
     -->
   </head>
+
   <body>
     <slot />
   </body>
