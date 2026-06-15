@@ -1,0 +1,79 @@
+---
+// src/pages/tools/aadhaar-photo-resize.astro
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import ToolHeader from '../../components/ui/ToolHeader';
+import PhotoResizeTool from '../../components/tools/PhotoResizeTool';
+import FAQSection from '../../components/ui/FAQSection';
+import RelatedTools from '../../components/ui/RelatedTools';
+import AdSlot from '../../components/ui/AdSlot';
+import { TOOLS } from '../../data/tools';
+
+const faqs = [
+  { question: 'What photo size does Aadhaar enrolment require?', answer: 'UIDAI typically requires a colour photo with a light background. The exact pixel dimensions vary by the enrolment software version. A safe standard is 200×200 px to 350×350 px, JPEG format, under 200KB. Always verify at the enrolment centre.' },
+  { question: 'Can I update my Aadhaar photo online?', answer: 'Yes, UIDAI allows photo updates through the myAadhaar portal (myaadhaar.uidai.gov.in). The portal will specify its own upload requirements. This tool can help you resize and compress your photo to meet those requirements.' },
+  { question: 'Is it safe to upload my photo here?', answer: 'Yes. Your photo is processed entirely in your browser and never uploaded to any server. JaldiDocs does not see, store or access your photo.' },
+];
+
+const presets = [
+  { label: '200×200 px', w: 200, h: 200, note: 'Standard square format' },
+  { label: '300×300 px', w: 300, h: 300, note: 'Higher resolution' },
+  { label: '350×450 px', w: 350, h: 450, note: 'Portrait format' },
+  { label: '413×531 px', w: 413, h: 531, note: '35×45mm at 300dpi' },
+];
+
+const relatedTools = TOOLS.filter(t => ['image-resize', 'image-compress', 'passport-photo-maker', 'pan-card-photo-resize'].includes(t.id));
+---
+
+<ToolLayout
+  title="Aadhaar Card Photo Resize Online Free | JaldiDocs"
+  description="Resize your photo for Aadhaar card update and enrolment portals. Choose standard sizes, adjust quality and download — all in your browser without any upload."
+  canonical="/tools/aadhaar-photo-resize"
+>
+  <ToolHeader
+    client:load
+    name="Aadhaar Photo Resize"
+    description="Resize and compress your photo for Aadhaar update and enrolment portal uploads. Select a preset or enter a custom size. Your photo never leaves your device."
+    breadcrumb={[{ label: 'Student Tools', href: '/#student-tools' }, { label: 'Aadhaar Photo Resize', href: '/tools/aadhaar-photo-resize' }]}
+  />
+
+  <PhotoResizeTool
+    client:load
+    toolName="Aadhaar Photo Resize"
+    presets={presets}
+    disclaimer="This is a general image resize tool. JaldiDocs is not affiliated with UIDAI or the Aadhaar programme. Please verify the exact photo requirements on the official UIDAI portal (uidai.gov.in) before uploading. Do not enter your Aadhaar number in this tool."
+    helpText="JPG, PNG or WEBP • Colour photo, plain background"
+  />
+
+  <div slot="seo-content">
+    <AdSlot client:load className="mb-10" />
+
+    <div class="prose-tool mt-4">
+      <h2>Photo Requirements for Aadhaar</h2>
+      <p>
+        For Aadhaar enrolment and update, UIDAI requires a clear colour photograph with both eyes open.
+        The background should be plain white or light-coloured. Glasses, caps and face coverings are
+        generally not allowed. The face should be clearly visible and centred.
+      </p>
+
+      <h2>How to Resize Your Photo for Aadhaar</h2>
+      <ol class="list-decimal list-inside space-y-1.5 my-3 text-sm text-secondary">
+        <li>Upload a clear, recent photo with a plain background</li>
+        <li>Select a preset size or enter custom dimensions</li>
+        <li>Set a target file size in KB if the portal has a limit</li>
+        <li>Click "Resize Photo" and download the result</li>
+        <li>Verify it meets the portal's requirements before uploading</li>
+      </ol>
+
+      <h2>Important Disclaimer</h2>
+      <p>
+        JaldiDocs is an independent tool and is not affiliated with UIDAI, the Government of India, or
+        any official Aadhaar service. Photo requirements can change. Always check the official UIDAI
+        portal at uidai.gov.in for the latest specifications. Do not enter your Aadhaar number or any
+        personal ID details in this tool.
+      </p>
+    </div>
+
+    <FAQSection client:load faqs={faqs} title="Aadhaar Photo Resize — FAQs" />
+    <RelatedTools client:load tools={relatedTools} currentId="aadhaar-photo-resize" />
+  </div>
+</ToolLayout>

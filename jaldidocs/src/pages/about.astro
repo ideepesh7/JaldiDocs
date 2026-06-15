@@ -1,0 +1,102 @@
+---
+// src/pages/about.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
+---
+
+<BaseLayout
+  title="About JaldiDocs - Free Document Tools for India"
+  description="Learn about JaldiDocs — our mission to make document tasks fast, private, and free for every Indian. No upload, no signup, browser-based tools."
+  canonical="/about"
+>
+  <Navbar client:load />
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <div class="mb-10">
+      <nav class="flex items-center gap-1.5 text-xs text-gray-400 mb-6">
+        <a href="/" class="hover:text-gray-600 transition-colors">Home</a>
+        <span>/</span>
+        <span class="text-gray-700 font-medium">About</span>
+      </nav>
+      <h1 class="text-3xl font-semibold text-gray-900 tracking-tight">About JaldiDocs</h1>
+      <p class="text-lg text-gray-500 mt-3 leading-relaxed">
+        Fast, private and free tools for everyday documents.
+      </p>
+    </div>
+
+    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-8 mb-10">
+      <h2 class="text-xl font-semibold text-gray-900 mb-3">Our Mission</h2>
+      <p class="text-gray-700 leading-relaxed">
+        To make everyday document tasks fast, private, and free for every Indian — whether you are a
+        student filling an exam form, a freelancer creating invoices, a job applicant uploading a
+        passport photo, or a tenant generating a rent receipt.
+      </p>
+    </div>
+
+    <div class="prose-tool space-y-8">
+      <section>
+        <h2>Why JaldiDocs Exists</h2>
+        <p>
+          Every day, millions of Indians spend unnecessary time and effort on routine document tasks —
+          resizing a photo for an exam form, compressing a PDF that won't upload, creating a basic
+          invoice, or generating a rent receipt for HRA claims.
+        </p>
+        <p>
+          Most existing tools either require you to create an account, upload your sensitive documents to
+          foreign servers, or pay for basic features. JaldiDocs is built differently.
+        </p>
+      </section>
+
+      <section>
+        <h2>Privacy is a Feature, Not a Promise</h2>
+        <p>
+          Every tool on JaldiDocs processes your files entirely inside your browser. When you resize an
+          image, merge a PDF, or create an invoice, none of your data leaves your device. This is not
+          just a policy statement — it is how the technology works. Your files never touch our servers
+          because we do not have file-receiving infrastructure.
+        </p>
+      </section>
+
+      <section>
+        <h2>What We Built</h2>
+        <p>JaldiDocs currently offers tools for:</p>
+        <ul>
+          <li><strong>Image tasks:</strong> Resize, compress, create passport photos, resize signatures</li>
+          <li><strong>PDF tasks:</strong> Convert images to PDF, merge PDFs, basic PDF optimisation</li>
+          <li><strong>Business tasks:</strong> Create GST invoices, generate rent receipts</li>
+          <li><strong>Identity form tasks:</strong> Resize photos for Aadhaar and PAN card portals</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Always Free</h2>
+        <p>
+          All current tools are free. We do not have a subscription plan, a paywall, or a premium tier.
+          To sustain the service in the future, we may display non-intrusive advertising. But the tools
+          themselves will always be free to use, without a signup.
+        </p>
+      </section>
+
+      <section>
+        <h2>Built for India</h2>
+        <p>
+          JaldiDocs is designed with Indian users in mind — the exam systems, government portals, GST
+          invoicing norms, HRA receipts, Aadhaar and PAN requirements, and the reality of average Indian
+          internet speeds. Tools are lightweight, mobile-first, and fast even on modest connections.
+        </p>
+      </section>
+
+      <section>
+        <h2>Contact Us</h2>
+        <p>
+          For feedback, tool requests, or anything else, reach us at
+          <a href="mailto:hello@jaldi-docs.example" class="text-accent hover:underline">hello@jaldi-docs.example</a>.
+          (Replace with real address before going live.)
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <Footer client:load />
+</BaseLayout>

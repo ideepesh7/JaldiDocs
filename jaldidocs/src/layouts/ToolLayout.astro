@@ -1,0 +1,34 @@
+---
+// src/layouts/ToolLayout.astro
+import BaseLayout from './BaseLayout.astro';
+import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
+import AdSlot from '../components/ui/AdSlot';
+
+export interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+}
+
+const { title, description, canonical } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}>
+  <Navbar client:load />
+
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <!-- Tool content is injected here -->
+    <slot />
+
+    <!-- Mid-content ad placeholder (safe distance from tool buttons) -->
+    <div class="mt-16 mb-6">
+      <AdSlot client:load label="Advertisement" />
+    </div>
+
+    <!-- Additional tool content (SEO, FAQs, related tools) -->
+    <slot name="seo-content" />
+  </div>
+
+  <Footer client:load />
+</BaseLayout>

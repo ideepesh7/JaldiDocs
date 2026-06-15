@@ -1,0 +1,76 @@
+---
+// src/pages/contact.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
+---
+
+<BaseLayout
+  title="Contact JaldiDocs - Feedback & Tool Requests"
+  description="Contact JaldiDocs for feedback, tool requests, or any questions about our free document tools for India."
+  canonical="/contact"
+>
+  <Navbar client:load />
+
+  <main class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <div class="mb-10">
+      <nav class="flex items-center gap-1.5 text-xs text-gray-400 mb-6">
+        <a href="/" class="hover:text-gray-600 transition-colors">Home</a>
+        <span>/</span>
+        <span class="text-gray-700 font-medium">Contact</span>
+      </nav>
+      <h1 class="text-3xl font-semibold text-gray-900 tracking-tight">Contact Us</h1>
+      <p class="text-gray-500 mt-3">
+        Have feedback, a tool suggestion, or a question? We'd love to hear from you.
+      </p>
+    </div>
+
+    <div class="card p-8 mb-8">
+      <h2 class="text-lg font-semibold text-gray-900 mb-2">Send us a message</h2>
+      <p class="text-sm text-gray-500 mb-5">
+        Email us directly at the address below. We typically respond within 2–3 business days.
+      </p>
+      <a
+        href="mailto:hello@jaldi-docs.example?subject=JaldiDocs Feedback"
+        class="inline-flex items-center gap-2.5 bg-accent text-white px-5 py-3 rounded-xl font-medium text-sm hover:bg-blue-700 transition-colors"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        hello@jaldi-docs.example
+      </a>
+      <p class="text-xs text-gray-400 mt-3">
+        Note: Replace this email with your real contact address before going live.
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div class="card p-5">
+        <h3 class="text-sm font-semibold text-gray-900 mb-2">Tool suggestions</h3>
+        <p class="text-xs text-gray-500 leading-relaxed">
+          Is there a document or image tool you wish JaldiDocs had? Let us know and we'll consider adding it.
+        </p>
+      </div>
+      <div class="card p-5">
+        <h3 class="text-sm font-semibold text-gray-900 mb-2">Bug reports</h3>
+        <p class="text-xs text-gray-500 leading-relaxed">
+          If a tool isn't working correctly on your device or browser, please describe the issue and your device/browser details.
+        </p>
+      </div>
+      <div class="card p-5">
+        <h3 class="text-sm font-semibold text-gray-900 mb-2">Privacy questions</h3>
+        <p class="text-xs text-gray-500 leading-relaxed">
+          Questions about how your data is handled? Read our <a href="/privacy" class="text-accent hover:underline">Privacy Policy</a> first, then write to us if you have more questions.
+        </p>
+      </div>
+      <div class="card p-5">
+        <h3 class="text-sm font-semibold text-gray-900 mb-2">Partnerships</h3>
+        <p class="text-xs text-gray-500 leading-relaxed">
+          Interested in partnering, sponsoring, or collaborating with JaldiDocs? Reach out with details about your proposal.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <Footer client:load />
+</BaseLayout>

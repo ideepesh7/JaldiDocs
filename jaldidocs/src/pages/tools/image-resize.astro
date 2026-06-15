@@ -1,0 +1,74 @@
+---
+// src/pages/tools/image-resize.astro
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import ToolHeader from '../../components/ui/ToolHeader';
+import ImageResize from '../../components/tools/ImageResize';
+import FAQSection from '../../components/ui/FAQSection';
+import RelatedTools from '../../components/ui/RelatedTools';
+import AdSlot from '../../components/ui/AdSlot';
+import { Maximize2 } from 'lucide-react';
+import { TOOLS } from '../../data/tools';
+import { IMAGE_RESIZE_FAQS } from '../../data/faqs';
+
+const relatedTools = TOOLS.filter(t => ['image-compress', 'passport-photo-maker', 'signature-resize', 'jpg-to-pdf'].includes(t.id));
+---
+
+<ToolLayout
+  title="Resize Image Online Free - JPG, PNG, WEBP Resizer | JaldiDocs"
+  description="Resize JPG, PNG and WEBP images to exact dimensions for free. No signup, no upload — all processing done in your browser. Perfect for exam forms, job portals and government websites."
+  canonical="/tools/image-resize"
+>
+  <ToolHeader
+    client:load
+    name="Image Resize"
+    description="Resize any JPG, PNG or WEBP image to exact dimensions. Set a preset or enter custom width and height. Your file is processed entirely in your browser and never uploaded."
+    breadcrumb={[{ label: 'Image Tools', href: '/#image-tools' }, { label: 'Image Resize', href: '/tools/image-resize' }]}
+  />
+
+  <ImageResize client:load />
+
+  <div slot="seo-content">
+    <!-- Top ad slot — safe distance from tool -->
+    <AdSlot client:load className="mb-10" />
+
+    <div class="prose-tool mt-4">
+      <h2>What is Image Resize?</h2>
+      <p>
+        Image Resize lets you change the width and height of a photo or image to any dimension you need.
+        Whether you need a specific pixel size for an online form or want to reduce dimensions to save space,
+        this tool does it instantly in your browser.
+      </p>
+
+      <h2>How to Resize an Image</h2>
+      <ol class="list-decimal list-inside space-y-1.5 my-3 text-sm text-secondary">
+        <li>Click "Choose File" or drag your image into the upload area</li>
+        <li>Select a preset size or enter your own width and height in pixels</li>
+        <li>Toggle aspect ratio lock to maintain proportions automatically</li>
+        <li>Choose your output format (JPG, PNG or WEBP) and quality</li>
+        <li>Click "Resize Image" and download the result</li>
+      </ol>
+
+      <h2>Common Resize Sizes for Indian Forms</h2>
+      <ul>
+        <li><strong>Passport / Visa photo:</strong> 35mm × 45mm (approximately 413 × 531 px at 300 DPI)</li>
+        <li><strong>SSC / UPSC / State PSC exams:</strong> Usually 200×230 px or 3.5cm × 4.5cm, under 50KB</li>
+        <li><strong>NEET, JEE, CUET:</strong> Check the notification — typically 3.5×4.5cm, 10KB–200KB</li>
+        <li><strong>Job portals (Naukri, LinkedIn):</strong> 400×400 px square is safe</li>
+        <li><strong>Aadhaar enrolment:</strong> Typically 200×200 px, under 200KB</li>
+      </ul>
+
+      <h2>Tips for Best Results</h2>
+      <ul>
+        <li>Use JPG format for photos — it gives the best file-size-to-quality ratio</li>
+        <li>Use PNG for images with sharp edges, text, or transparent backgrounds</li>
+        <li>For government forms, always check the official notification for the exact size and file size limit</li>
+        <li>If the portal gives a dimension in cm, use 300 DPI to calculate pixels (e.g. 3.5cm = ~413px)</li>
+        <li>Do not enlarge a small image — this will make it blurry without adding detail</li>
+      </ul>
+    </div>
+
+    <FAQSection client:load faqs={IMAGE_RESIZE_FAQS} title="Image Resize — Frequently Asked Questions" />
+
+    <RelatedTools client:load tools={relatedTools} currentId="image-resize" />
+  </div>
+</ToolLayout>

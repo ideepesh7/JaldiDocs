@@ -1,0 +1,17 @@
+---
+// src/pages/index.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
+import HomePage from '../components/HomePage';
+---
+
+<BaseLayout
+  title="JaldiDocs - Free PDF, Image & Document Tools for India"
+  description="Free online PDF, image and document tools for India. Resize images, compress PDFs, create invoices, make passport photos — all in your browser. No signup. No upload."
+  canonical="/"
+>
+  <Navbar client:load />
+  <HomePage client:load />
+  <Footer client:load />
+</BaseLayout>

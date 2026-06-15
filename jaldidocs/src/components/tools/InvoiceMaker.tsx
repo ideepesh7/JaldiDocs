@@ -1,0 +1,439 @@
+// src/components/tools/InvoiceMaker.tsx
+import { useState, useEffect, useRef } from 'react';
+import { Plus, Trash2, Download, RotateCcw, Save } from 'lucide-react';
+import { jsPDF } from 'jspdf';
+
+interface LineItem {
+  id: string;
+  description: string;
+  qty: number;
+  rate: number;
+  gst: number;
+  discount: number;
+}
+
+interface InvoiceData {
+  bizName: string;
+  bizAddress: string;
+  bizPhone: string;
+  bizEmail: string;
+  gstin: string;
+  clientName: string;
+  clientAddress: string;
+  invoiceNo: string;
+  invoiceDate: string;
+  dueDate: string;
+  items: LineItem[];
+  notes: string;
+  terms: string;
+  bankDetails: string;
+}
+
+const STORAGE_KEY = 'jaldidocs_invoice_draft';
+
+const defaultItem = (): LineItem => ({
+  id: crypto.randomUUID(),
+  description: '',
+  qty: 1,
+  rate: 0,
+  gst: 18,
+  discount: 0,
+});
+
+const defaultData = (): InvoiceData => ({
+  bizName: '',
+  bizAddress: '',
+  bizPhone: '',
+  bizEmail: '',
+  gstin: '',
+  clientName: '',
+  clientAddress: '',
+  invoiceNo: 'INV-001',
+  invoiceDate: new Date().toISOString().split('T')[0],
+  dueDate: '',
+  items: [defaultItem()],
+  notes: '',
+  terms: 'Payment due within 30 days.',
+  bankDetails: '',
+});
+
+function calcItem(item: LineItem) {
+  const base = item.qty * item.rate;
+  const discountAmt = (base * item.discount) / 100;
+  const taxable = base - discountAmt;
+  const gstAmt = (taxable * item.gst) / 100;
+  return { base, discountAmt, taxable, gstAmt, total: taxable + gstAmt };
+}
+
+export default function InvoiceMaker() {
+  const [data, setData] = useState<InvoiceData>(defaultData);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) setData(JSON.parse(stored));
+    } catch {}
+  }, []);
+
+  const set = (field: keyof InvoiceData, value: any) =>
+    setData((d) => ({ ...d, [field]: value }));
+
+  const setItem = (id: string, field: keyof LineItem, value: any) =>
+    setData((d) => ({
+      ...d,
+      items: d.items.map((item) => (item.id === id ? { ...item, [field]: value } : item)),
+    }));
+
+  const addItem = () => setData((d) => ({ ...d, items: [...d.items, defaultItem()] }));
+  const removeItem = (id: string) =>
+    setData((d) => ({ ...d, items: d.items.filter((i) => i.id !== id) }));
+
+  const totals = data.items.reduce(
+    (acc, item) => {
+      const c = calcItem(item);
+      return {
+        subtotal: acc.subtotal + c.taxable,
+        gst: acc.gst + c.gstAmt,
+        discount: acc.discount + c.discountAmt,
+        total: acc.total + c.total,
+      };
+    },
+    { subtotal: 0, gst: 0, discount: 0, total: 0 }
+  );
+
+  const saveDraft = () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
+
+  const clearDraft = () => {
+    localStorage.removeItem(STORAGE_KEY);
+    setData(defaultData());
+  };
+
+  const fillSample = () => {
+    setData({
+      bizName: 'Ravi Enterprises',
+      bizAddress: '45, MG Road, Bengaluru, KA 560001',
+      bizPhone: '+91 98765 43210',
+      bizEmail: 'ravi@ravienterprises.in',
+      gstin: '29ABCDE1234F1Z5',
+      clientName: 'Priya Tech Solutions',
+      clientAddress: '12, Nehru Place, New Delhi 110019',
+      invoiceNo: 'INV-2024-042',
+      invoiceDate: new Date().toISOString().split('T')[0],
+      dueDate: new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0],
+      items: [
+        { id: '1', description: 'Web Design Services', qty: 1, rate: 25000, gst: 18, discount: 0 },
+        { id: '2', description: 'Domain & Hosting (1 year)', qty: 1, rate: 5000, gst: 18, discount: 5 },
+      ],
+      notes: 'Thank you for your business!',
+      terms: 'Payment due within 30 days. Late payment may attract 2% monthly interest.',
+      bankDetails: 'Bank: SBI | A/C: 1234567890 | IFSC: SBIN0001234',
+    });
+  };
+
+  const downloadPdf = () => {
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    const pageW = 210;
+    const margin = 15;
+    let y = margin;
+
+    const line = (x1: number, y1: number, x2: number, y2: number) => {
+      doc.setDrawColor(229, 231, 235);
+      doc.line(x1, y1, x2, y2);
+    };
+
+    // Header
+    doc.setFillColor(37, 99, 235);
+    doc.rect(0, 0, pageW, 35, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont('helvetica', 'bold');
+    doc.text(data.bizName || 'Your Business', margin, 15);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text(data.bizAddress, margin, 21);
+    doc.text([data.bizPhone, data.bizEmail].filter(Boolean).join(' | '), margin, 26);
+    if (data.gstin) doc.text('GSTIN: ' + data.gstin, margin, 31);
+
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text('INVOICE', pageW - margin, 18, { align: 'right' });
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text('#' + data.invoiceNo, pageW - margin, 25, { align: 'right' });
+
+    y = 45;
+    doc.setTextColor(17, 24, 39);
+
+    // Bill To / Invoice details
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('BILL TO', margin, y);
+    doc.text('INVOICE DETAILS', pageW / 2 + margin, y);
+    y += 5;
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(75, 85, 99);
+    doc.text(data.clientName || '—', margin, y);
+    doc.text('Date: ' + (data.invoiceDate || '—'), pageW / 2 + margin, y);
+    y += 5;
+    const addrLines = doc.splitTextToSize(data.clientAddress || '', 75);
+    doc.text(addrLines, margin, y);
+    doc.text('Due: ' + (data.dueDate || '—'), pageW / 2 + margin, y);
+    y += Math.max(addrLines.length * 4, 8) + 5;
+
+    // Table header
+    doc.setFillColor(243, 244, 246);
+    doc.rect(margin, y, pageW - 2 * margin, 7, 'F');
+    doc.setTextColor(17, 24, 39);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    const cols = { desc: margin + 1, qty: 105, rate: 125, gst: 148, total: 168 };
+    doc.text('Description', cols.desc, y + 5);
+    doc.text('Qty', cols.qty, y + 5);
+    doc.text('Rate (₹)', cols.rate, y + 5);
+    doc.text('GST%', cols.gst, y + 5);
+    doc.text('Amount (₹)', cols.total, y + 5);
+    y += 9;
+
+    // Items
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(75, 85, 99);
+    data.items.forEach((item) => {
+      const c = calcItem(item);
+      line(margin, y, pageW - margin, y);
+      y += 5;
+      const descLines = doc.splitTextToSize(item.description || '—', 55);
+      doc.text(descLines, cols.desc, y);
+      doc.text(String(item.qty), cols.qty, y);
+      doc.text(item.rate.toLocaleString('en-IN'), cols.rate, y);
+      doc.text(item.gst + '%', cols.gst, y);
+      doc.text(c.total.toLocaleString('en-IN', { minimumFractionDigits: 2 }), cols.total, y);
+      y += Math.max(descLines.length * 4, 6) + 1;
+    });
+
+    // Totals
+    y += 4;
+    line(margin, y, pageW - margin, y);
+    y += 6;
+    const totalX = pageW - margin - 60;
+    const rightX = pageW - margin;
+
+    const row = (label: string, val: string, bold = false) => {
+      if (bold) { doc.setFont('helvetica', 'bold'); doc.setTextColor(17, 24, 39); }
+      else { doc.setFont('helvetica', 'normal'); doc.setTextColor(75, 85, 99); }
+      doc.setFontSize(9);
+      doc.text(label, totalX, y);
+      doc.text(val, rightX, y, { align: 'right' });
+      y += 6;
+    };
+
+    row('Subtotal', '₹' + totals.subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 }));
+    if (totals.discount > 0) row('Discount', '−₹' + totals.discount.toLocaleString('en-IN', { minimumFractionDigits: 2 }));
+    row('GST', '₹' + totals.gst.toLocaleString('en-IN', { minimumFractionDigits: 2 }));
+    doc.setFillColor(237, 242, 255);
+    doc.rect(totalX - 2, y - 1, rightX - totalX + 2, 9, 'F');
+    row('Total Amount', '₹' + totals.total.toLocaleString('en-IN', { minimumFractionDigits: 2 }), true);
+
+    // Footer notes
+    if (data.bankDetails || data.notes || data.terms) {
+      y += 6;
+      line(margin, y, pageW - margin, y);
+      y += 6;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(17, 24, 39);
+      if (data.bankDetails) { doc.text('Bank Details', margin, y); y += 4; doc.setFont('helvetica', 'normal'); doc.setTextColor(75, 85, 99); doc.text(data.bankDetails, margin, y); y += 6; }
+      if (data.notes) { doc.setFont('helvetica', 'bold'); doc.setTextColor(17, 24, 39); doc.text('Notes', margin, y); y += 4; doc.setFont('helvetica', 'normal'); doc.setTextColor(75, 85, 99); doc.text(doc.splitTextToSize(data.notes, pageW - 2 * margin), margin, y); y += 6; }
+      if (data.terms) { doc.setFont('helvetica', 'bold'); doc.setTextColor(17, 24, 39); doc.text('Terms', margin, y); y += 4; doc.setFont('helvetica', 'normal'); doc.setTextColor(75, 85, 99); doc.text(doc.splitTextToSize(data.terms, pageW - 2 * margin), margin, y); }
+    }
+
+    doc.save(`invoice-${data.invoiceNo || 'draft'}.pdf`);
+  };
+
+  const fmt = (n: number) => '₹' + n.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+
+  return (
+    <div className="space-y-6">
+      {/* Action bar */}
+      <div className="flex flex-wrap items-center gap-2 justify-end">
+        <button onClick={fillSample} className="btn-ghost text-xs">Load Sample Data</button>
+        <button onClick={saveDraft} className="btn-secondary text-xs gap-1.5">
+          <Save className="w-3.5 h-3.5" /> {saved ? 'Saved!' : 'Save Draft'}
+        </button>
+        <button onClick={clearDraft} className="btn-ghost text-xs text-danger">
+          <RotateCcw className="w-3.5 h-3.5" /> Clear
+        </button>
+        <button onClick={downloadPdf} className="btn-primary text-xs gap-1.5">
+          <Download className="w-3.5 h-3.5" /> Download PDF
+        </button>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Left: Business + Client */}
+        <div className="space-y-4">
+          <div className="card p-5">
+            <h3 className="text-sm font-semibold text-primary mb-4">Your Business Details</h3>
+            <div className="space-y-3">
+              {[
+                { field: 'bizName', label: 'Business Name', placeholder: 'Ravi Enterprises' },
+                { field: 'bizAddress', label: 'Address', placeholder: '45, MG Road, Bengaluru' },
+                { field: 'bizPhone', label: 'Phone', placeholder: '+91 98765 43210' },
+                { field: 'bizEmail', label: 'Email', placeholder: 'hello@yourbusiness.in' },
+                { field: 'gstin', label: 'GSTIN (optional)', placeholder: '29ABCDE1234F1Z5' },
+              ].map(({ field, label, placeholder }) => (
+                <div key={field}>
+                  <label className="label" htmlFor={field}>{label}</label>
+                  <input
+                    id={field}
+                    type="text"
+                    value={String(data[field as keyof InvoiceData] || '')}
+                    onChange={(e) => set(field as keyof InvoiceData, e.target.value)}
+                    placeholder={placeholder}
+                    className="input-field text-sm"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="card p-5">
+            <h3 className="text-sm font-semibold text-primary mb-4">Client Details</h3>
+            <div className="space-y-3">
+              <div>
+                <label className="label" htmlFor="clientName">Client Name</label>
+                <input id="clientName" type="text" value={data.clientName} onChange={(e) => set('clientName', e.target.value)} placeholder="Priya Tech Solutions" className="input-field text-sm" />
+              </div>
+              <div>
+                <label className="label" htmlFor="clientAddress">Client Address</label>
+                <textarea id="clientAddress" value={data.clientAddress} onChange={(e) => set('clientAddress', e.target.value)} placeholder="12, Nehru Place, New Delhi" className="input-field text-sm resize-none" rows={2} />
+              </div>
+            </div>
+          </div>
+
+          <div className="card p-5">
+            <h3 className="text-sm font-semibold text-primary mb-4">Invoice Details</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="label" htmlFor="invoiceNo">Invoice No.</label>
+                <input id="invoiceNo" type="text" value={data.invoiceNo} onChange={(e) => set('invoiceNo', e.target.value)} className="input-field text-sm" />
+              </div>
+              <div>
+                <label className="label" htmlFor="invoiceDate">Invoice Date</label>
+                <input id="invoiceDate" type="date" value={data.invoiceDate} onChange={(e) => set('invoiceDate', e.target.value)} className="input-field text-sm" />
+              </div>
+              <div className="col-span-2">
+                <label className="label" htmlFor="dueDate">Due Date</label>
+                <input id="dueDate" type="date" value={data.dueDate} onChange={(e) => set('dueDate', e.target.value)} className="input-field text-sm" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Items + Totals */}
+        <div className="space-y-4">
+          <div className="card p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-semibold text-primary">Line Items</h3>
+              <button onClick={addItem} className="btn-secondary text-xs gap-1.5">
+                <Plus className="w-3.5 h-3.5" /> Add Item
+              </button>
+            </div>
+            <div className="space-y-3">
+              {data.items.map((item) => (
+                <div key={item.id} className="bg-gray-50 rounded-xl p-4 space-y-3">
+                  <div className="flex items-start gap-2">
+                    <div className="flex-1">
+                      <label className="label text-xs">Description</label>
+                      <input
+                        type="text"
+                        value={item.description}
+                        onChange={(e) => setItem(item.id, 'description', e.target.value)}
+                        placeholder="Web design services"
+                        className="input-field text-sm"
+                        aria-label="Item description"
+                      />
+                    </div>
+                    {data.items.length > 1 && (
+                      <button onClick={() => removeItem(item.id)} className="mt-6 p-1.5 rounded-lg text-danger hover:bg-red-50 transition-colors" aria-label="Remove item">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                    {[
+                      { f: 'qty', label: 'Qty', type: 'number', step: '1', min: '0' },
+                      { f: 'rate', label: 'Rate (₹)', type: 'number', step: '0.01', min: '0' },
+                      { f: 'gst', label: 'GST %', type: 'number', step: '0.5', min: '0' },
+                      { f: 'discount', label: 'Disc %', type: 'number', step: '0.5', min: '0' },
+                    ].map(({ f, label, type, step, min }) => (
+                      <div key={f}>
+                        <label className="label text-xs">{label}</label>
+                        <input
+                          type={type}
+                          value={String(item[f as keyof LineItem])}
+                          onChange={(e) => setItem(item.id, f as keyof LineItem, parseFloat(e.target.value) || 0)}
+                          step={step}
+                          min={min}
+                          className="input-field text-xs"
+                          aria-label={label}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-right text-xs text-accent font-semibold">
+                    {fmt(calcItem(item).total)}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Totals */}
+            <div className="mt-4 bg-blue-50 rounded-xl p-4 space-y-2 text-sm">
+              {[
+                { label: 'Subtotal', val: fmt(totals.subtotal) },
+                ...(totals.discount > 0 ? [{ label: 'Discount', val: '−' + fmt(totals.discount) }] : []),
+                { label: 'GST', val: fmt(totals.gst) },
+              ].map(({ label, val }) => (
+                <div key={label} className="flex justify-between text-secondary">
+                  <span>{label}</span><span>{val}</span>
+                </div>
+              ))}
+              <div className="flex justify-between font-semibold text-primary border-t border-blue-200 pt-2">
+                <span>Total Amount</span>
+                <span className="text-accent">{fmt(totals.total)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="card p-5 space-y-3">
+            <h3 className="text-sm font-semibold text-primary">Additional Information</h3>
+            <div>
+              <label className="label" htmlFor="bankDetails">Bank / Payment Details</label>
+              <textarea id="bankDetails" value={data.bankDetails} onChange={(e) => set('bankDetails', e.target.value)} placeholder="Bank: SBI | A/C: 123... | IFSC: SBIN..." className="input-field text-sm resize-none" rows={2} />
+            </div>
+            <div>
+              <label className="label" htmlFor="notes">Notes</label>
+              <textarea id="notes" value={data.notes} onChange={(e) => set('notes', e.target.value)} placeholder="Thank you for your business!" className="input-field text-sm resize-none" rows={2} />
+            </div>
+            <div>
+              <label className="label" htmlFor="terms">Terms</label>
+              <textarea id="terms" value={data.terms} onChange={(e) => set('terms', e.target.value)} className="input-field text-sm resize-none" rows={2} />
+            </div>
+          </div>
+
+          <button onClick={downloadPdf} className="btn-primary w-full justify-center">
+            <Download className="w-4 h-4" /> Download Invoice PDF
+          </button>
+        </div>
+      </div>
+
+      <p className="text-xs text-gray-400 text-center pb-2">
+        Invoice data is saved only in your browser (localStorage) if you click "Save Draft". Nothing is sent to any server.
+      </p>
+    </div>
+  );
+}

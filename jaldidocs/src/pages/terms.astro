@@ -1,0 +1,135 @@
+---
+// src/pages/terms.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
+---
+
+<BaseLayout
+  title="Terms of Use | JaldiDocs"
+  description="JaldiDocs terms of use. Tools are provided for convenience. Users must verify document requirements independently. Read our complete terms."
+  canonical="/terms"
+>
+  <Navbar client:load />
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <div class="mb-10">
+      <nav class="flex items-center gap-1.5 text-xs text-gray-400 mb-6">
+        <a href="/" class="hover:text-gray-600 transition-colors">Home</a>
+        <span>/</span>
+        <span class="text-gray-700 font-medium">Terms of Use</span>
+      </nav>
+      <h1 class="text-3xl font-semibold text-gray-900 tracking-tight">Terms of Use</h1>
+      <p class="text-gray-500 text-sm mt-2">Last updated: January 2025</p>
+    </div>
+
+    <div class="prose-tool space-y-8">
+      <section>
+        <h2>1. Acceptance of Terms</h2>
+        <p>
+          By using JaldiDocs and its tools, you agree to these Terms of Use. If you do not agree, please
+          do not use the website. These terms may be updated from time to time. Continued use of the site
+          after updates constitutes acceptance.
+        </p>
+      </section>
+
+      <section>
+        <h2>2. Tools Provided for Convenience Only</h2>
+        <p>
+          All tools on JaldiDocs are provided as general-purpose utilities for convenience. They are not
+          official tools endorsed by any government body, regulatory authority, or educational institution.
+        </p>
+        <p>
+          You must independently verify all official requirements — including photo sizes, file formats,
+          document formats, and submission procedures — on the relevant official portal or with the
+          relevant authority before submitting any document generated or processed using JaldiDocs.
+        </p>
+      </section>
+
+      <section>
+        <h2>3. No Guarantee of Acceptance</h2>
+        <p>
+          JaldiDocs does not guarantee that any photo, PDF, invoice, rent receipt, or other document
+          created or processed using our tools will be accepted by any government portal, exam authority,
+          employer, bank, or other institution. Requirements vary by organisation and can change without
+          notice. Always verify with the receiving organisation.
+        </p>
+      </section>
+
+      <section>
+        <h2>4. No Legal, Tax, or Financial Advice</h2>
+        <p>
+          JaldiDocs does not provide legal, tax, financial, or accounting advice. Tools such as the
+          Invoice Maker and Rent Receipt Generator are basic formatting utilities only. For GST compliance,
+          HRA claims, tax filings, or any legal document requirements, consult a qualified Chartered
+          Accountant, tax professional, or lawyer.
+        </p>
+      </section>
+
+      <section>
+        <h2>5. User Responsibility</h2>
+        <p>By using JaldiDocs, you agree that:</p>
+        <ul>
+          <li>You are responsible for verifying that any generated document meets the requirements of the intended recipient</li>
+          <li>You will not use the tools for fraudulent, illegal, or harmful purposes</li>
+          <li>You will not use the tools to create documents with false or misleading information</li>
+          <li>You are responsible for the accuracy and legality of information you enter into any tool (invoices, receipts, etc.)</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>6. Limitation of Liability</h2>
+        <p>
+          JaldiDocs and its creators are not liable for any direct, indirect, incidental, or consequential
+          damages arising from the use of this website or its tools, including but not limited to:
+        </p>
+        <ul>
+          <li>Rejection of documents by any authority or institution</li>
+          <li>Loss of data due to browser limitations or device issues</li>
+          <li>Errors in tax calculations or invoice formats</li>
+          <li>Any financial, legal, or reputational consequences of using generated documents</li>
+        </ul>
+        <p>
+          The tools are provided "as is" without warranty of any kind, express or implied.
+        </p>
+      </section>
+
+      <section>
+        <h2>7. Intellectual Property</h2>
+        <p>
+          The JaldiDocs brand, website design, original written content, and code are the intellectual
+          property of JaldiDocs. You may not copy, reproduce, or redistribute the website design or
+          content without permission. The tool output (resized images, PDFs, invoices, etc.) belongs
+          to you.
+        </p>
+      </section>
+
+      <section>
+        <h2>8. Free Service</h2>
+        <p>
+          JaldiDocs is currently a free service. We reserve the right to introduce optional paid features,
+          display non-intrusive advertising, or change the service offering in the future. The core tools
+          will remain free to use.
+        </p>
+      </section>
+
+      <section>
+        <h2>9. Governing Law</h2>
+        <p>
+          These terms are governed by the laws of India. Any disputes arising from the use of JaldiDocs
+          shall be subject to the jurisdiction of courts in India.
+        </p>
+      </section>
+
+      <section>
+        <h2>10. Contact</h2>
+        <p>
+          For queries about these terms, contact us at
+          <a href="mailto:hello@jaldi-docs.example" class="text-accent hover:underline">hello@jaldi-docs.example</a>.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <Footer client:load />
+</BaseLayout>

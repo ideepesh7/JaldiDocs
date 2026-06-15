@@ -1,0 +1,77 @@
+---
+// src/pages/tools/pdf-compressor.astro
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import ToolHeader from '../../components/ui/ToolHeader';
+import PdfCompressor from '../../components/tools/PdfCompressor';
+import FAQSection from '../../components/ui/FAQSection';
+import RelatedTools from '../../components/ui/RelatedTools';
+import AdSlot from '../../components/ui/AdSlot';
+import { TOOLS } from '../../data/tools';
+import { PDF_COMPRESS_FAQS } from '../../data/faqs';
+
+const relatedTools = TOOLS.filter(t => ['merge-pdf', 'jpg-to-pdf', 'image-compress', 'image-resize'].includes(t.id));
+---
+
+<ToolLayout
+  title="Compress PDF Online Free - Reduce PDF Size Without Upload | JaldiDocs"
+  description="Reduce PDF file size with basic browser-based optimisation. Works best on text-heavy PDFs. No upload, no signup — your PDF stays on your device."
+  canonical="/tools/pdf-compressor"
+>
+  <ToolHeader
+    client:load
+    name="PDF Compressor"
+    description="Optimise and reduce the size of your PDF file using browser-based processing. Best results on text-heavy PDFs. Your file is never uploaded to any server."
+    breadcrumb={[{ label: 'PDF Tools', href: '/#pdf-tools' }, { label: 'PDF Compressor', href: '/tools/pdf-compressor' }]}
+  />
+
+  <PdfCompressor client:load />
+
+  <div slot="seo-content">
+    <AdSlot client:load className="mb-10" />
+
+    <div class="prose-tool mt-4">
+      <h2>About This Browser-Based PDF Compressor</h2>
+      <p>
+        This tool attempts to reduce the file size of your PDF by performing a structural optimisation —
+        removing redundant metadata, normalising the PDF structure, and using object streams. This approach
+        works well for text-heavy and vector-based PDFs such as digital documents, exported reports, and
+        word processor PDFs.
+      </p>
+
+      <h2>Why Some PDFs Won't Compress Much</h2>
+      <p>
+        PDFs that are primarily scanned images (e.g. photocopied certificates, printed and scanned forms)
+        store content as embedded image data. Compressing that image data requires server-side reprocessing.
+        A browser tool cannot safely decompress and recompress JPEG images embedded inside a PDF without
+        a significant quality reduction. We believe in being honest about this limitation rather than
+        faking results.
+      </p>
+
+      <h2>What Types of PDFs Compress Best</h2>
+      <ul>
+        <li>PDFs created by Word, Excel, Google Docs or LibreOffice</li>
+        <li>PDFs exported from websites or online portals</li>
+        <li>Invoice or report PDFs with mostly text and simple graphics</li>
+        <li>PDFs with embedded fonts that have redundant metadata</li>
+      </ul>
+
+      <h2>What Types of PDFs Won't Compress Much</h2>
+      <ul>
+        <li>Scanned documents (marksheets, certificates, Aadhaar card scans)</li>
+        <li>PDFs that are already optimised</li>
+        <li>PDF portfolios or presentations with many embedded images</li>
+        <li>Password-protected PDFs (these cannot be processed at all)</li>
+      </ul>
+
+      <h2>Alternatives If This Tool Doesn't Help</h2>
+      <p>
+        If your PDF is scanned and does not compress well here, consider printing it to a PDF again using
+        your operating system's PDF printer (Windows: Microsoft Print to PDF; Mac: Print → Save as PDF).
+        This can sometimes reduce file size by rebuilding the PDF structure.
+      </p>
+    </div>
+
+    <FAQSection client:load faqs={PDF_COMPRESS_FAQS} title="PDF Compressor — FAQs" />
+    <RelatedTools client:load tools={relatedTools} currentId="pdf-compressor" />
+  </div>
+</ToolLayout>

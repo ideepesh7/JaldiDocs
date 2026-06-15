@@ -1,0 +1,80 @@
+---
+// src/pages/tools/invoice-maker.astro
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import ToolHeader from '../../components/ui/ToolHeader';
+import InvoiceMaker from '../../components/tools/InvoiceMaker';
+import FAQSection from '../../components/ui/FAQSection';
+import RelatedTools from '../../components/ui/RelatedTools';
+import AdSlot from '../../components/ui/AdSlot';
+import { TOOLS } from '../../data/tools';
+import { INVOICE_FAQS } from '../../data/faqs';
+
+const relatedTools = TOOLS.filter(t => ['rent-receipt-generator', 'merge-pdf', 'jpg-to-pdf', 'pdf-compressor'].includes(t.id));
+---
+
+<ToolLayout
+  title="Free Invoice Maker India - Create & Download GST Invoice PDF | JaldiDocs"
+  description="Create professional GST invoices online for free. Add line items, calculate taxes, apply discounts and download as PDF. Free for freelancers and small businesses. No signup."
+  canonical="/tools/invoice-maker"
+>
+  <ToolHeader
+    client:load
+    name="Invoice Maker"
+    description="Create professional GST invoices with automatic tax calculation. Add your business details, client info, line items and download a clean PDF invoice. Data saved locally in your browser."
+    breadcrumb={[{ label: 'Business Tools', href: '/#business-tools' }, { label: 'Invoice Maker', href: '/tools/invoice-maker' }]}
+  />
+
+  <InvoiceMaker client:load />
+
+  <div slot="seo-content">
+    <AdSlot client:load className="mb-10" />
+
+    <div class="prose-tool mt-4">
+      <h2>Free Invoice Maker for Indian Freelancers and Businesses</h2>
+      <p>
+        This invoice maker is designed for freelancers, consultants, small business owners, and traders
+        in India. You can create a professional-looking GST invoice, calculate taxes automatically,
+        and download it as a PDF — all for free with no account required.
+      </p>
+
+      <h2>How to Create an Invoice</h2>
+      <ol class="list-decimal list-inside space-y-1.5 my-3 text-sm text-secondary">
+        <li>Enter your business name, address, phone, email and optional GSTIN</li>
+        <li>Fill in client name and address</li>
+        <li>Set invoice number, date and due date</li>
+        <li>Add line items with description, quantity, rate, GST% and discount</li>
+        <li>Optionally add bank details, notes and terms</li>
+        <li>Click "Download Invoice PDF" to save a professional PDF</li>
+        <li>Click "Save Draft" to preserve your data in this browser</li>
+      </ol>
+
+      <h2>Who Should Use This Tool</h2>
+      <ul>
+        <li><strong>Freelancers:</strong> Web designers, developers, writers, photographers</li>
+        <li><strong>Consultants:</strong> CA, lawyers, management consultants</li>
+        <li><strong>Traders:</strong> Small shops, retail traders, distributors</li>
+        <li><strong>Service providers:</strong> Electricians, plumbers, tutors, coaches</li>
+        <li><strong>Agencies:</strong> Digital marketing, HR, recruitment firms</li>
+      </ul>
+
+      <h2>GST Invoice Fields Explained</h2>
+      <ul>
+        <li><strong>GSTIN:</strong> Your 15-digit GST Identification Number (if registered)</li>
+        <li><strong>HSN/SAC:</strong> You can add this in the item description field</li>
+        <li><strong>CGST + SGST vs IGST:</strong> This tool calculates a combined GST. For inter-state supply, it applies as IGST; for intra-state, split equally as CGST + SGST</li>
+        <li><strong>Reverse Charge:</strong> Add this as a note in the terms section if applicable</li>
+      </ul>
+
+      <h2>Important Note</h2>
+      <p>
+        This tool creates a standard invoice format for convenience. For legal GST compliance, verify your
+        invoice format with a Chartered Accountant. GST rules vary based on your registration type (Regular,
+        Composition, Unregistered). Do not use this as a substitute for professional accounting software
+        if you are a regular GST-registered business.
+      </p>
+    </div>
+
+    <FAQSection client:load faqs={INVOICE_FAQS} title="Invoice Maker — FAQs" />
+    <RelatedTools client:load tools={relatedTools} currentId="invoice-maker" />
+  </div>
+</ToolLayout>

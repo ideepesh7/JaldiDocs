@@ -1,0 +1,254 @@
+// src/components/tools/JpgToPdf.tsx
+import { useState, useRef } from 'react';
+import { FileImage, Download, RotateCcw, ArrowUp, ArrowDown, X } from 'lucide-react';
+import { jsPDF } from 'jspdf';
+import UploadDropzone from '../ui/UploadDropzone';
+
+interface ImageFile {
+  id: string;
+  file: File;
+  url: string;
+  name: string;
+}
+
+type PageSize = 'a4' | 'letter' | 'fit';
+type Orientation = 'portrait' | 'landscape';
+type Margin = 'none' | 'small' | 'medium' | 'large';
+
+const MARGIN_PX: Record<Margin, number> = { none: 0, small: 5, medium: 10, large: 20 };
+
+export default function JpgToPdf() {
+  const [images, setImages] = useState<ImageFile[]>([]);
+  const [pageSize, setPageSize] = useState<PageSize>('a4');
+  const [orientation, setOrientation] = useState<Orientation>('portrait');
+  const [margin, setMargin] = useState<Margin>('small');
+  const [processing, setProcessing] = useState(false);
+  const [error, setError] = useState('');
+  const downloadRef = useRef<HTMLAnchorElement>(null);
+
+  const addImages = (files: File[]) => {
+    const newImgs = files.map((file) => ({
+      id: crypto.randomUUID(),
+      file,
+      url: URL.createObjectURL(file),
+      name: file.name,
+    }));
+    setImages((prev) => [...prev, ...newImgs]);
+    setError('');
+  };
+
+  const remove = (id: string) => setImages((prev) => prev.filter((i) => i.id !== id));
+
+  const move = (id: string, dir: 'up' | 'down') => {
+    setImages((prev) => {
+      const idx = prev.findIndex((i) => i.id === id);
+      if ((dir === 'up' && idx === 0) || (dir === 'down' && idx === prev.length - 1)) return prev;
+      const arr = [...prev];
+      const swap = dir === 'up' ? idx - 1 : idx + 1;
+      [arr[idx], arr[swap]] = [arr[swap], arr[idx]];
+      return arr;
+    });
+  };
+
+  const generate = async () => {
+    if (images.length === 0) { setError('Please add at least one image.'); return; }
+    setProcessing(true);
+    setError('');
+
+    try {
+      const isA4 = pageSize === 'a4';
+      const isLetter = pageSize === 'letter';
+      const format = pageSize === 'fit' ? undefined : (isA4 ? 'a4' : 'letter');
+      const m = MARGIN_PX[margin];
+
+      let doc: jsPDF | null = null;
+
+      for (let i = 0; i < images.length; i++) {
+        const imgFile = images[i];
+        const img = new window.Image();
+        img.src = imgFile.url;
+        await new Promise((res) => (img.onload = res));
+
+        const naturalW = img.naturalWidth;
+        const naturalH = img.naturalHeight;
+
+        let pageW: number, pageH: number;
+        if (pageSize === 'fit') {
+          pageW = naturalW * 0.264583; // px to mm
+          pageH = naturalH * 0.264583;
+        } else {
+          pageW = isA4
+            ? (orientation === 'portrait' ? 210 : 297)
+            : (orientation === 'portrait' ? 215.9 : 279.4);
+          pageH = isA4
+            ? (orientation === 'portrait' ? 297 : 210)
+            : (orientation === 'portrait' ? 279.4 : 215.9);
+        }
+
+        if (i === 0) {
+          doc = new jsPDF({ unit: 'mm', format: format || [pageW, pageH], orientation: pageSize === 'fit' ? 'portrait' : orientation });
+        } else {
+          doc!.addPage(format || [pageW, pageH], pageSize === 'fit' ? 'portrait' : orientation);
+        }
+
+        const usableW = pageW - 2 * m;
+        const usableH = pageH - 2 * m;
+        const imgAspect = naturalW / naturalH;
+        const areaAspect = usableW / usableH;
+        let drawW, drawH;
+        if (imgAspect > areaAspect) {
+          drawW = usableW;
+          drawH = usableW / imgAspect;
+        } else {
+          drawH = usableH;
+          drawW = usableH * imgAspect;
+        }
+        const drawX = m + (usableW - drawW) / 2;
+        const drawY = m + (usableH - drawH) / 2;
+
+        const canvas = document.createElement('canvas');
+        canvas.width = naturalW;
+        canvas.height = naturalH;
+        canvas.getContext('2d')!.drawImage(img, 0, 0);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+        doc!.addImage(dataUrl, 'JPEG', drawX, drawY, drawW, drawH);
+      }
+
+      doc!.save('images-to-pdf.pdf');
+    } catch (e) {
+      setError('Could not generate PDF. Please try again.');
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const fmtSize = (b: number) => b < 1024 * 1024 ? `${(b / 1024).toFixed(1)} KB` : `${(b / 1024 / 1024).toFixed(2)} MB`;
+
+  return (
+    <div className="space-y-6">
+      {/* Upload */}
+      <div className="card p-6">
+        <UploadDropzone
+          accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+          multiple
+          onFiles={addImages}
+          label={images.length > 0 ? 'Add more images' : 'Drop images here or click to choose'}
+          helpText="Supports JPG, PNG and WEBP • Select multiple files"
+          maxSizeMB={50}
+          icon={<FileImage className="w-6 h-6" />}
+        />
+      </div>
+
+      {images.length > 0 && (
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Image list */}
+          <div className="md:col-span-2 card p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-semibold text-primary">
+                {images.length} image{images.length !== 1 ? 's' : ''} added
+              </h3>
+              <button onClick={() => setImages([])} className="btn-ghost text-xs gap-1.5 text-danger">
+                <X className="w-3.5 h-3.5" /> Clear all
+              </button>
+            </div>
+            <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
+              {images.map((img, idx) => (
+                <div key={img.id} className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+                  <img src={img.url} alt={img.name} className="w-12 h-12 rounded-lg object-cover bg-gray-200 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-primary truncate">{img.name}</p>
+                    <p className="text-xs text-secondary">{fmtSize(img.file.size)}</p>
+                  </div>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <button onClick={() => move(img.id, 'up')} disabled={idx === 0} className="p-1.5 rounded-lg text-secondary hover:bg-gray-200 disabled:opacity-30 transition-colors" aria-label="Move up">
+                      <ArrowUp className="w-3.5 h-3.5" />
+                    </button>
+                    <button onClick={() => move(img.id, 'down')} disabled={idx === images.length - 1} className="p-1.5 rounded-lg text-secondary hover:bg-gray-200 disabled:opacity-30 transition-colors" aria-label="Move down">
+                      <ArrowDown className="w-3.5 h-3.5" />
+                    </button>
+                    <button onClick={() => remove(img.id)} className="p-1.5 rounded-lg text-danger hover:bg-red-50 transition-colors" aria-label="Remove image">
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Settings */}
+          <div className="space-y-4">
+            <div className="card p-5 space-y-4">
+              <h3 className="text-sm font-semibold text-primary">PDF Settings</h3>
+
+              <div>
+                <label className="label">Page Size</label>
+                <div className="space-y-2">
+                  {[
+                    { id: 'a4', label: 'A4 (210×297mm)' },
+                    { id: 'letter', label: 'Letter (216×279mm)' },
+                    { id: 'fit', label: 'Fit to image' },
+                  ].map((s) => (
+                    <label key={s.id} className="flex items-center gap-2.5 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="pageSize"
+                        value={s.id}
+                        checked={pageSize === s.id}
+                        onChange={() => setPageSize(s.id as PageSize)}
+                        className="accent-accent"
+                      />
+                      <span className="text-sm text-secondary">{s.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {pageSize !== 'fit' && (
+                <div>
+                  <label className="label">Orientation</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {['portrait', 'landscape'].map((o) => (
+                      <button
+                        key={o}
+                        onClick={() => setOrientation(o as Orientation)}
+                        className={`py-2 text-xs font-medium rounded-xl border transition-all capitalize ${
+                          orientation === o ? 'border-accent bg-accent text-white' : 'border-border text-secondary hover:border-accent'
+                        }`}
+                      >
+                        {o}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <label className="label">Margin</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {(['none', 'small', 'medium', 'large'] as Margin[]).map((m) => (
+                    <button
+                      key={m}
+                      onClick={() => setMargin(m)}
+                      className={`py-2 text-xs font-medium rounded-xl border transition-all capitalize ${
+                        margin === m ? 'border-accent bg-accent text-white' : 'border-border text-secondary hover:border-accent'
+                      }`}
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {error && <p className="error-text">{error}</p>}
+
+            <button onClick={generate} disabled={processing} className="btn-primary w-full justify-center">
+              <Download className="w-4 h-4" />
+              {processing ? 'Creating PDF…' : 'Create PDF'}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

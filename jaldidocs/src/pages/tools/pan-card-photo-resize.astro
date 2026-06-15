@@ -1,0 +1,81 @@
+---
+// src/pages/tools/pan-card-photo-resize.astro
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import ToolHeader from '../../components/ui/ToolHeader';
+import PhotoResizeTool from '../../components/tools/PhotoResizeTool';
+import FAQSection from '../../components/ui/FAQSection';
+import RelatedTools from '../../components/ui/RelatedTools';
+import AdSlot from '../../components/ui/AdSlot';
+import { TOOLS } from '../../data/tools';
+
+const faqs = [
+  { question: 'What photo size is required for a PAN card?', answer: 'For new PAN card applications via NSDL or UTIITSL, the passport-type photo should typically be 3.5cm × 3.5cm (approximately 413×413 px at 300 DPI). The digital upload usually requires JPEG format under 50KB–100KB. Check the specific portal for current requirements.' },
+  { question: 'Can I apply for a PAN card using this photo?', answer: 'You can use this tool to resize your photo to the required dimensions, but you must verify the current photo specifications on the NSDL (tin-nsdl.com) or UTIITSL (utiitsl.com) portal before submitting.' },
+  { question: 'Is my photo safe here?', answer: 'Completely safe. Your photo is processed in your browser and never leaves your device. JaldiDocs has no access to your files.' },
+];
+
+const presets = [
+  { label: '413×413 px', w: 413, h: 413, note: '3.5×3.5cm at 300dpi' },
+  { label: '200×200 px', w: 200, h: 200, note: 'Smaller version' },
+  { label: '300×300 px', w: 300, h: 300, note: 'Standard square' },
+  { label: '413×531 px', w: 413, h: 531, note: '35×45mm passport' },
+];
+
+const relatedTools = TOOLS.filter(t => ['image-resize', 'image-compress', 'passport-photo-maker', 'aadhaar-photo-resize'].includes(t.id));
+---
+
+<ToolLayout
+  title="PAN Card Photo Resize Online Free | JaldiDocs"
+  description="Resize your photo to the correct size for PAN card applications (NSDL/UTIITSL). Free, browser-based, no upload required. No personal data collected."
+  canonical="/tools/pan-card-photo-resize"
+>
+  <ToolHeader
+    client:load
+    name="PAN Card Photo Resize"
+    description="Resize your photo to the standard dimensions for PAN card application portals. Supports custom sizes and file size compression. All processing in your browser."
+    breadcrumb={[{ label: 'Student Tools', href: '/#student-tools' }, { label: 'PAN Card Photo Resize', href: '/tools/pan-card-photo-resize' }]}
+  />
+
+  <PhotoResizeTool
+    client:load
+    toolName="PAN Card Photo Resize"
+    presets={presets}
+    disclaimer="This is a general image resize tool. JaldiDocs is not affiliated with NSDL, UTIITSL, or the Income Tax Department. Please verify the exact photo requirements on the official portal before submitting. Do not enter your PAN number in this tool."
+    helpText="JPG, PNG or WEBP • Passport-style, white background, recent photo"
+  />
+
+  <div slot="seo-content">
+    <AdSlot client:load className="mb-10" />
+
+    <div class="prose-tool mt-4">
+      <h2>Photo Requirements for PAN Card Application</h2>
+      <p>
+        A PAN card application requires a recent passport-type photograph with a plain white background.
+        Both eyes should be open and clearly visible. The face should be centred. The standard photo size
+        is 3.5cm × 3.5cm.
+      </p>
+      <p>
+        Always verify the current requirements on the official portal:
+        NSDL (tin-nsdl.com) or UTIITSL (utiitsl.com), as specifications may change.
+      </p>
+
+      <h2>Common Uses</h2>
+      <ul>
+        <li>New PAN card application (Form 49A for Indian citizens)</li>
+        <li>PAN card correction or reprint application</li>
+        <li>e-PAN download portal photo verification</li>
+        <li>Income tax portal account photo upload</li>
+      </ul>
+
+      <h2>Important Note</h2>
+      <p>
+        JaldiDocs does not collect PAN numbers or any personal identity information. This tool only
+        processes your photograph. For any issues with your PAN application, contact NSDL or UTIITSL
+        directly.
+      </p>
+    </div>
+
+    <FAQSection client:load faqs={faqs} title="PAN Card Photo — FAQs" />
+    <RelatedTools client:load tools={relatedTools} currentId="pan-card-photo-resize" />
+  </div>
+</ToolLayout>

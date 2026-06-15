@@ -1,0 +1,182 @@
+/* JaldiDocs Global Styles */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: #F8F7F2;
+    --surface: rgba(255,255,255,0.85);
+    --primary: #111827;
+    --secondary: #4B5563;
+    --accent: #2563EB;
+    --accent-soft: #EEF2FF;
+    --border: #E5E7EB;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    background-color: var(--bg);
+    color: var(--primary);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #F8F7F2;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  ::selection {
+    background: #DBEAFE;
+    color: #1E40AF;
+  }
+
+  :focus-visible {
+    outline: 2px solid #2563EB;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-2 bg-accent text-white px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 bg-white text-primary border border-border px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 hover:bg-gray-50 hover:shadow-sm focus-visible:ring-2 focus-visible:ring-accent;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 text-secondary px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200 hover:bg-gray-100 hover:text-primary;
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center gap-2 bg-red-50 text-danger border border-red-200 px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 hover:bg-red-100;
+  }
+
+  .card {
+    @apply bg-white/85 backdrop-blur-sm border border-border rounded-2xl shadow-card;
+  }
+
+  .tool-card {
+    @apply card p-5 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer;
+  }
+
+  .input-field {
+    @apply w-full px-3.5 py-2.5 rounded-xl border border-border bg-white text-primary placeholder-gray-400 text-sm transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-primary mb-1.5;
+  }
+
+  .helper-text {
+    @apply text-xs text-secondary mt-1;
+  }
+
+  .error-text {
+    @apply text-xs text-danger mt-1;
+  }
+
+  .section-title {
+    @apply text-2xl md:text-3xl font-semibold text-primary tracking-tight;
+  }
+
+  .section-subtitle {
+    @apply text-secondary text-base mt-2 max-w-xl;
+  }
+
+  .prose-tool {
+    @apply text-secondary text-sm leading-relaxed;
+  }
+
+  .prose-tool h2 {
+    @apply text-lg font-semibold text-primary mt-8 mb-3;
+  }
+
+  .prose-tool h3 {
+    @apply text-base font-semibold text-primary mt-5 mb-2;
+  }
+
+  .prose-tool ul {
+    @apply list-disc list-inside space-y-1 my-3;
+  }
+
+  .prose-tool p {
+    @apply mb-3;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 text-xs font-medium px-2.5 py-0.5 rounded-full;
+  }
+
+  .badge-pdf {
+    @apply badge bg-red-50 text-red-700;
+  }
+
+  .badge-image {
+    @apply badge bg-violet-50 text-violet-700;
+  }
+
+  .badge-business {
+    @apply badge bg-emerald-50 text-emerald-700;
+  }
+
+  .badge-student {
+    @apply badge bg-blue-50 text-blue-700;
+  }
+
+  .dropzone {
+    @apply border-2 border-dashed border-border rounded-2xl p-8 md:p-12 text-center transition-all duration-200 cursor-pointer hover:border-accent hover:bg-accent-soft/50;
+  }
+
+  .dropzone-active {
+    @apply border-accent bg-accent-soft;
+  }
+
+  .ad-slot {
+    @apply border border-dashed border-gray-200 rounded-xl bg-gray-50/50 text-center py-6 px-4;
+  }
+
+  .privacy-notice {
+    @apply flex items-start gap-3 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-sm text-emerald-800;
+  }
+}
+
+/* Subtle grain texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* Page animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.10s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.20s; }
