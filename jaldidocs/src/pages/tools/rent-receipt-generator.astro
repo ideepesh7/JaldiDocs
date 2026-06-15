@@ -1,75 +1,74 @@
 ---
-// src/pages/tools/jpg-to-pdf.astro
+// src/pages/tools/rent-receipt-generator.astro
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import ToolHeader from '../../components/ui/ToolHeader';
-import JpgToPdf from '../../components/tools/JpgToPdf';
+import RentReceiptGenerator from '../../components/tools/RentReceiptGenerator';
 import FAQSection from '../../components/ui/FAQSection';
 import RelatedTools from '../../components/ui/RelatedTools';
 import AdSlot from '../../components/ui/AdSlot';
 import { TOOLS } from '../../data/tools';
 
 const faqs = [
-  { question: 'How many images can I convert at once?', answer: 'You can add as many images as you need. However, for best performance in the browser, keep the combined file size under 50MB. Very large image sets may be slow on older devices.' },
-  { question: 'Will image quality be reduced in the PDF?', answer: 'The tool converts images at 92% quality which is visually excellent for most uses. If you need lossless quality, use PNG format images as input.' },
-  { question: 'Can I reorder the images before converting?', answer: 'Yes. Use the up and down arrows next to each image to reorder them. The PDF pages will follow the same order as your image list.' },
-  { question: 'What page size should I use?', answer: 'A4 is the standard for India (office documents, resumes, applications). Use "Fit to image" if you want the PDF pages to exactly match each image\'s dimensions.' },
+  { question: 'Is this rent receipt valid for HRA exemption?', answer: 'The rent receipt generated here follows a standard format suitable for HRA claims. However, for tax exemption purposes, consult your employer\'s HR or a CA. Rent receipts above ₹1 lakh per year require the landlord\'s PAN.' },
+  { question: 'Does the landlord need to sign the receipt?', answer: 'For HRA claims, a signed receipt is generally required. Print the receipt and have your landlord sign it, or obtain their digital signature if your employer accepts it.' },
+  { question: 'Is my data saved anywhere?', answer: 'Your data is only saved in your browser\'s localStorage if you click "Save Draft". Nothing is sent to any server. You can clear your browser data or click "Clear" to remove it.' },
+  { question: 'Can I generate receipts for multiple months?', answer: 'Yes. Change the month and receipt number for each month, click "Download PDF" separately for each. Optionally save a draft to preserve your landlord and address details across months.' },
 ];
 
-const relatedTools = TOOLS.filter(t => ['merge-pdf', 'pdf-compressor', 'image-resize', 'image-compress'].includes(t.id));
+const relatedTools = TOOLS.filter(t => ['invoice-maker', 'merge-pdf', 'pdf-compressor', 'jpg-to-pdf'].includes(t.id));
 ---
 
 <ToolLayout
-  title="JPG to PDF Converter Online Free - Images to PDF | JaldiDocs"
-  description="Convert multiple JPG, PNG and WEBP images into a single PDF file. Set page size, orientation and margin. Free, no upload, no signup — browser-based conversion."
-  canonical="/tools/jpg-to-pdf"
+  title="Rent Receipt Generator Online Free - Download PDF | JaldiDocs"
+  description="Generate professional rent receipts for HRA tax claims. Enter tenant, landlord and rent details, then download as PDF or print. Free, no signup, browser-based."
+  canonical="/tools/rent-receipt-generator"
 >
   <ToolHeader
     client:load
-    name="JPG to PDF"
-    description="Convert one or multiple JPG, PNG or WEBP images into a single PDF. Upload images, reorder them, choose page size and orientation, then download your PDF."
-    breadcrumb={[{ label: 'PDF Tools', href: '/#pdf-tools' }, { label: 'JPG to PDF', href: '/tools/jpg-to-pdf' }]}
+    name="Rent Receipt Generator"
+    description="Generate a professional rent receipt in seconds. Fill in tenant, landlord and payment details, preview instantly, and download as a PDF. Data is saved only in your browser."
+    breadcrumb={[{ label: 'Business Tools', href: '/#business-tools' }, { label: 'Rent Receipt Generator', href: '/tools/rent-receipt-generator' }]}
   />
 
-  <JpgToPdf client:load />
+  <RentReceiptGenerator client:load />
 
   <div slot="seo-content">
     <AdSlot client:load className="mb-10" />
 
     <div class="prose-tool mt-4">
-      <h2>Convert Images to PDF in Your Browser</h2>
+      <h2>What is a Rent Receipt?</h2>
       <p>
-        This tool converts JPG, PNG and WEBP images into a standard PDF file without uploading anything to
-        a server. It works entirely in your browser using modern web technology. This is ideal when you need
-        to submit multiple photos as a single document.
+        A rent receipt is a document issued by a landlord to a tenant confirming that rent has been paid.
+        In India, rent receipts are commonly used to claim House Rent Allowance (HRA) exemption under
+        Section 10(13A) of the Income Tax Act.
       </p>
 
-      <h2>Common Use Cases in India</h2>
+      <h2>When Do You Need a Rent Receipt?</h2>
       <ul>
-        <li>Combining marksheet photos and certificate photos for college admissions</li>
-        <li>Converting scanned documents into a single PDF for government portals</li>
-        <li>Submitting multiple ID proof photos as one document for bank KYC</li>
-        <li>Creating a photo album or presentation in PDF format</li>
-        <li>Combining property photos for a rental or sale document</li>
+        <li>To claim HRA exemption while filing income tax returns (ITR)</li>
+        <li>To submit proof of rent to your employer for salary processing</li>
+        <li>As a legal record of rent payment between tenant and landlord</li>
+        <li>For bank loan applications that require proof of residence</li>
       </ul>
 
-      <h2>How to Convert JPG to PDF</h2>
-      <ol class="list-decimal list-inside space-y-1.5 my-3 text-sm text-secondary">
-        <li>Click "Choose Files" or drag your images into the upload area</li>
-        <li>Use the arrows to reorder pages if needed</li>
-        <li>Choose page size (A4 is standard), orientation and margin</li>
-        <li>Click "Create PDF" — the download will start automatically</li>
-      </ol>
-
-      <h2>Tips</h2>
+      <h2>HRA Exemption Rules (General Guide)</h2>
       <ul>
-        <li>For official documents, use A4 portrait with a small or medium margin</li>
-        <li>Use "Fit to image" when you want the PDF to preserve the exact image proportions</li>
-        <li>If images are very large, compress them first using the Image Compress tool</li>
-        <li>PNG images preserve quality better but produce larger PDFs than JPG</li>
+        <li>HRA is exempt under Section 10(13A) if you live in rented accommodation</li>
+        <li>If annual rent exceeds ₹1,00,000, the landlord's PAN is mandatory</li>
+        <li>You cannot claim HRA if you own the property you live in</li>
+        <li>Rent receipts should ideally be monthly and signed by the landlord</li>
+        <li>Always consult a CA or tax professional for personalised advice</li>
       </ul>
+
+      <h2>Important Disclaimer</h2>
+      <p>
+        JaldiDocs provides this tool for convenience only. This is not legal or tax advice. For accurate
+        HRA claims and tax compliance, consult a Chartered Accountant or a tax professional. The format
+        of rent receipts required by employers or tax authorities may differ.
+      </p>
     </div>
 
-    <FAQSection client:load faqs={faqs} title="JPG to PDF — FAQs" />
-    <RelatedTools client:load tools={relatedTools} currentId="jpg-to-pdf" />
+    <FAQSection client:load faqs={faqs} title="Rent Receipt — FAQs" />
+    <RelatedTools client:load tools={relatedTools} currentId="rent-receipt-generator" />
   </div>
 </ToolLayout>

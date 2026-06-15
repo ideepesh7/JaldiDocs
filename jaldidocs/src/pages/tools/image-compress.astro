@@ -1,94 +1,71 @@
 ---
-// src/pages/tools/jpg-to-pdf.astro
-
+// src/pages/tools/image-compress.astro
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import ToolHeader from '../../components/ui/ToolHeader';
-import JpgToPdf from '../../components/tools/JpgToPdf';
+import ImageCompress from '../../components/tools/ImageCompress';
 import FAQSection from '../../components/ui/FAQSection';
 import RelatedTools from '../../components/ui/RelatedTools';
 import AdSlot from '../../components/ui/AdSlot';
 import { TOOLS } from '../../data/tools';
+import { IMAGE_COMPRESS_FAQS } from '../../data/faqs';
 
-const siteUrl = 'https://jaldidocs.pages.dev';
-
-const faqs = [
-  {
-    question: 'How many images can I convert at once?',
-    answer: 'You can add multiple images. For best performance, keep total size under 50MB.'
-  },
-  {
-    question: 'Will image quality be reduced?',
-    answer: 'No major quality loss. Images are optimized for best PDF balance.'
-  },
-  {
-    question: 'Can I reorder images?',
-    answer: 'Yes, drag or use arrows to reorder before conversion.'
-  },
-  {
-    question: 'Which page size should I use?',
-    answer: 'A4 is best for documents, Fit-to-image for exact size output.'
-  }
-];
-
-const relatedTools = TOOLS
-  ? TOOLS.filter(t =>
-      ['merge-pdf', 'pdf-compressor', 'image-resize', 'image-compress'].includes(t.id)
-    )
-  : [];
+const relatedTools = TOOLS.filter(t => ['image-resize', 'passport-photo-maker', 'signature-resize', 'jpg-to-pdf'].includes(t.id));
 ---
 
 <ToolLayout
-  title="JPG to PDF Converter Online Free | JaldiDocs"
-  description="Convert JPG, PNG, and WEBP images into a single PDF instantly in your browser. No upload, no signup, 100% free tool."
-  canonical="/tools/jpg-to-pdf"
+  title="Compress Image Online Free - Under 50KB, 100KB, 200KB | JaldiDocs"
+  description="Compress JPG, PNG and WEBP images to reduce file size. Target under 50KB, 100KB or 200KB. All compression happens in your browser — your photo is never uploaded."
+  canonical="/tools/image-compress"
 >
   <ToolHeader
     client:load
-    name="JPG to PDF Converter"
-    description="Convert images into a single PDF file directly in your browser. Fast, secure, and free."
-    breadcrumb={[
-      { label: 'PDF Tools', href: '/#pdf-tools' },
-      { label: 'JPG to PDF', href: '/tools/jpg-to-pdf' }
-    ]}
+    name="Image Compress"
+    description="Reduce the file size of your JPG, PNG or WEBP image. Set a target size in KB or adjust the quality slider. Works entirely in your browser — nothing is uploaded."
+    breadcrumb={[{ label: 'Image Tools', href: '/#image-tools' }, { label: 'Image Compress', href: '/tools/image-compress' }]}
   />
 
-  <JpgToPdf client:load />
+  <ImageCompress client:load />
 
   <div slot="seo-content">
     <AdSlot client:load className="mb-10" />
 
     <div class="prose-tool mt-4">
-      <h2>Convert Images to PDF Online</h2>
+      <h2>Why Compress Images?</h2>
       <p>
-        Convert JPG, PNG, and WEBP images into a single PDF file directly in your browser.
-        No uploads, no signup, completely private processing.
+        Many Indian government portals, exam registration systems, and job application websites have strict
+        file size limits for photo uploads — commonly under 50KB, 100KB or 200KB. This tool lets you
+        compress your image to meet those limits without needing any software.
       </p>
 
-      <h2>Use Cases</h2>
-      <ul>
-        <li>College documents & marksheets</li>
-        <li>Bank KYC submissions</li>
-        <li>Government forms</li>
-        <li>Scanned documents merging</li>
-      </ul>
-
-      <h2>Steps</h2>
-      <ol>
-        <li>Select images</li>
-        <li>Reorder if needed</li>
-        <li>Choose settings</li>
-        <li>Download PDF</li>
+      <h2>How to Compress an Image</h2>
+      <ol class="list-decimal list-inside space-y-1.5 my-3 text-sm text-secondary">
+        <li>Upload your JPG, PNG or WEBP image using the file picker or drag and drop</li>
+        <li>Choose a quick target size preset (50KB, 100KB, 200KB, 500KB) or enter a custom target</li>
+        <li>Or skip the target and use the quality slider for manual control</li>
+        <li>Click "Compress Image" — see the before/after size comparison</li>
+        <li>Download the compressed image</li>
       </ol>
+
+      <h2>Compression Size Guide for Indian Portals</h2>
+      <ul>
+        <li><strong>SSC CGL, CHSL, MTS:</strong> Candidate photo under 50KB</li>
+        <li><strong>UPSC CSE, CDS:</strong> Photo under 40KB–300KB depending on portal</li>
+        <li><strong>Banking (IBPS, SBI PO):</strong> Photo under 50KB, Signature under 20KB</li>
+        <li><strong>NEET, JEE, CUET:</strong> Typically 10KB–200KB — check notification</li>
+        <li><strong>Passport Seva:</strong> Photo under 1MB, face clearly visible</li>
+        <li><strong>Railway NTPC / ALP:</strong> Photo under 100KB</li>
+      </ul>
 
       <h2>Tips</h2>
       <ul>
-        <li>Use A4 for official documents</li>
-        <li>Compress large images first</li>
-        <li>Use JPG for smaller file size</li>
+        <li>JPG compression is lossy — slight quality loss is normal and usually invisible at print or screen size</li>
+        <li>PNG files are larger but lossless — best for signatures and screenshots</li>
+        <li>Very small target sizes (under 20KB) may require reducing dimensions as well — use Image Resize first</li>
+        <li>A photo taken in good lighting compresses much better than a dark or blurry photo</li>
       </ul>
     </div>
 
-    <FAQSection client:load faqs={faqs} title="FAQs - JPG to PDF" />
-    <RelatedTools client:load tools={relatedTools} currentId="jpg-to-pdf" />
+    <FAQSection client:load faqs={IMAGE_COMPRESS_FAQS} title="Image Compress — FAQs" />
+    <RelatedTools client:load tools={relatedTools} currentId="image-compress" />
   </div>
 </ToolLayout>

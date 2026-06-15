@@ -1,75 +1,77 @@
 ---
-// src/pages/tools/jpg-to-pdf.astro
+// src/pages/tools/passport-photo-maker.astro
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import ToolHeader from '../../components/ui/ToolHeader';
-import JpgToPdf from '../../components/tools/JpgToPdf';
+import PassportPhotoMaker from '../../components/tools/PassportPhotoMaker';
 import FAQSection from '../../components/ui/FAQSection';
 import RelatedTools from '../../components/ui/RelatedTools';
 import AdSlot from '../../components/ui/AdSlot';
 import { TOOLS } from '../../data/tools';
+import { PASSPORT_FAQS } from '../../data/faqs';
 
-const faqs = [
-  { question: 'How many images can I convert at once?', answer: 'You can add as many images as you need. However, for best performance in the browser, keep the combined file size under 50MB. Very large image sets may be slow on older devices.' },
-  { question: 'Will image quality be reduced in the PDF?', answer: 'The tool converts images at 92% quality which is visually excellent for most uses. If you need lossless quality, use PNG format images as input.' },
-  { question: 'Can I reorder the images before converting?', answer: 'Yes. Use the up and down arrows next to each image to reorder them. The PDF pages will follow the same order as your image list.' },
-  { question: 'What page size should I use?', answer: 'A4 is the standard for India (office documents, resumes, applications). Use "Fit to image" if you want the PDF pages to exactly match each image\'s dimensions.' },
-];
-
-const relatedTools = TOOLS.filter(t => ['merge-pdf', 'pdf-compressor', 'image-resize', 'image-compress'].includes(t.id));
+const relatedTools = TOOLS.filter(t => ['image-resize', 'image-compress', 'aadhaar-photo-resize', 'pan-card-photo-resize'].includes(t.id));
 ---
 
 <ToolLayout
-  title="JPG to PDF Converter Online Free - Images to PDF | JaldiDocs"
-  description="Convert multiple JPG, PNG and WEBP images into a single PDF file. Set page size, orientation and margin. Free, no upload, no signup — browser-based conversion."
-  canonical="/tools/jpg-to-pdf"
+  title="Passport Photo Maker India - 35x45mm Photo Online Free | JaldiDocs"
+  description="Create standard Indian passport photos (35×45mm), 2×2 inch visa photos and custom sizes online for free. Generate a printable sheet of photos. No signup, browser-based."
+  canonical="/tools/passport-photo-maker"
 >
   <ToolHeader
     client:load
-    name="JPG to PDF"
-    description="Convert one or multiple JPG, PNG or WEBP images into a single PDF. Upload images, reorder them, choose page size and orientation, then download your PDF."
-    breadcrumb={[{ label: 'PDF Tools', href: '/#pdf-tools' }, { label: 'JPG to PDF', href: '/tools/jpg-to-pdf' }]}
+    name="Passport Photo Maker"
+    description="Create correctly sized passport and visa photos in your browser. Choose Indian passport (35×45mm), 2×2 inch, or a custom size. Download as JPG or generate a printable sheet."
+    breadcrumb={[{ label: 'Image Tools', href: '/#image-tools' }, { label: 'Passport Photo Maker', href: '/tools/passport-photo-maker' }]}
   />
 
-  <JpgToPdf client:load />
+  <PassportPhotoMaker client:load />
 
   <div slot="seo-content">
     <AdSlot client:load className="mb-10" />
 
     <div class="prose-tool mt-4">
-      <h2>Convert Images to PDF in Your Browser</h2>
+      <h2>Indian Passport Photo Requirements</h2>
       <p>
-        This tool converts JPG, PNG and WEBP images into a standard PDF file without uploading anything to
-        a server. It works entirely in your browser using modern web technology. This is ideal when you need
-        to submit multiple photos as a single document.
+        For Indian passport applications, the standard photo size is <strong>35mm × 45mm</strong> with a
+        plain white background. The face should cover about 70–80% of the frame. Both eyes must be open
+        and clearly visible. The photo must be recent (taken within the last 6 months).
+      </p>
+      <p>
+        Always verify the latest requirements on the official Passport Seva portal
+        (passportindia.gov.in) before submitting your application, as requirements can change.
       </p>
 
-      <h2>Common Use Cases in India</h2>
-      <ul>
-        <li>Combining marksheet photos and certificate photos for college admissions</li>
-        <li>Converting scanned documents into a single PDF for government portals</li>
-        <li>Submitting multiple ID proof photos as one document for bank KYC</li>
-        <li>Creating a photo album or presentation in PDF format</li>
-        <li>Combining property photos for a rental or sale document</li>
-      </ul>
-
-      <h2>How to Convert JPG to PDF</h2>
+      <h2>How to Use This Tool</h2>
       <ol class="list-decimal list-inside space-y-1.5 my-3 text-sm text-secondary">
-        <li>Click "Choose Files" or drag your images into the upload area</li>
-        <li>Use the arrows to reorder pages if needed</li>
-        <li>Choose page size (A4 is standard), orientation and margin</li>
-        <li>Click "Create PDF" — the download will start automatically</li>
+        <li>Upload a clear, front-facing photo with good lighting</li>
+        <li>Select your target photo size (Indian Passport, 2×2 inch, or custom)</li>
+        <li>Choose background colour (white is standard for most documents)</li>
+        <li>Click "Generate Passport Photo" to preview the result</li>
+        <li>Download as JPG for digital use or as a PDF sheet for printing</li>
       </ol>
 
-      <h2>Tips</h2>
+      <h2>Photo Requirements for Common Indian Documents</h2>
       <ul>
-        <li>For official documents, use A4 portrait with a small or medium margin</li>
-        <li>Use "Fit to image" when you want the PDF to preserve the exact image proportions</li>
-        <li>If images are very large, compress them first using the Image Compress tool</li>
-        <li>PNG images preserve quality better but produce larger PDFs than JPG</li>
+        <li><strong>Passport:</strong> 35×45mm, white background, plain light clothing</li>
+        <li><strong>Aadhaar:</strong> Colour photo, white/light background, no cap or sunglasses</li>
+        <li><strong>PAN Card:</strong> 3.5×3.5cm, white background, recent photo</li>
+        <li><strong>Visa (US, UK, Schengen):</strong> 2×2 inch (50×50mm), white background</li>
+        <li><strong>Exam forms (SSC, UPSC, IBPS):</strong> Typically 3.5×4.5cm, under 50–100KB</li>
+        <li><strong>Driving licence:</strong> Check RTO requirements — usually 3.5×4.5cm</li>
+      </ul>
+
+      <h2>Tips for a Good Passport Photo</h2>
+      <ul>
+        <li>Take the photo in natural light near a window — avoid harsh flash</li>
+        <li>Use a plain white or light wall as background if possible</li>
+        <li>Face the camera directly, with a neutral expression</li>
+        <li>Remove glasses (as per recent Indian passport rules)</li>
+        <li>Wear plain clothing without busy patterns</li>
+        <li>Keep hair away from the face so both ears are visible</li>
       </ul>
     </div>
 
-    <FAQSection client:load faqs={faqs} title="JPG to PDF — FAQs" />
-    <RelatedTools client:load tools={relatedTools} currentId="jpg-to-pdf" />
+    <FAQSection client:load faqs={PASSPORT_FAQS} title="Passport Photo — FAQs" />
+    <RelatedTools client:load tools={relatedTools} currentId="passport-photo-maker" />
   </div>
 </ToolLayout>

@@ -1,75 +1,81 @@
 ---
-// src/pages/tools/jpg-to-pdf.astro
+// src/pages/tools/pan-card-photo-resize.astro
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import ToolHeader from '../../components/ui/ToolHeader';
-import JpgToPdf from '../../components/tools/JpgToPdf';
+import PhotoResizeTool from '../../components/tools/PhotoResizeTool';
 import FAQSection from '../../components/ui/FAQSection';
 import RelatedTools from '../../components/ui/RelatedTools';
 import AdSlot from '../../components/ui/AdSlot';
 import { TOOLS } from '../../data/tools';
 
 const faqs = [
-  { question: 'How many images can I convert at once?', answer: 'You can add as many images as you need. However, for best performance in the browser, keep the combined file size under 50MB. Very large image sets may be slow on older devices.' },
-  { question: 'Will image quality be reduced in the PDF?', answer: 'The tool converts images at 92% quality which is visually excellent for most uses. If you need lossless quality, use PNG format images as input.' },
-  { question: 'Can I reorder the images before converting?', answer: 'Yes. Use the up and down arrows next to each image to reorder them. The PDF pages will follow the same order as your image list.' },
-  { question: 'What page size should I use?', answer: 'A4 is the standard for India (office documents, resumes, applications). Use "Fit to image" if you want the PDF pages to exactly match each image\'s dimensions.' },
+  { question: 'What photo size is required for a PAN card?', answer: 'For new PAN card applications via NSDL or UTIITSL, the passport-type photo should typically be 3.5cm × 3.5cm (approximately 413×413 px at 300 DPI). The digital upload usually requires JPEG format under 50KB–100KB. Check the specific portal for current requirements.' },
+  { question: 'Can I apply for a PAN card using this photo?', answer: 'You can use this tool to resize your photo to the required dimensions, but you must verify the current photo specifications on the NSDL (tin-nsdl.com) or UTIITSL (utiitsl.com) portal before submitting.' },
+  { question: 'Is my photo safe here?', answer: 'Completely safe. Your photo is processed in your browser and never leaves your device. JaldiDocs has no access to your files.' },
 ];
 
-const relatedTools = TOOLS.filter(t => ['merge-pdf', 'pdf-compressor', 'image-resize', 'image-compress'].includes(t.id));
+const presets = [
+  { label: '413×413 px', w: 413, h: 413, note: '3.5×3.5cm at 300dpi' },
+  { label: '200×200 px', w: 200, h: 200, note: 'Smaller version' },
+  { label: '300×300 px', w: 300, h: 300, note: 'Standard square' },
+  { label: '413×531 px', w: 413, h: 531, note: '35×45mm passport' },
+];
+
+const relatedTools = TOOLS.filter(t => ['image-resize', 'image-compress', 'passport-photo-maker', 'aadhaar-photo-resize'].includes(t.id));
 ---
 
 <ToolLayout
-  title="JPG to PDF Converter Online Free - Images to PDF | JaldiDocs"
-  description="Convert multiple JPG, PNG and WEBP images into a single PDF file. Set page size, orientation and margin. Free, no upload, no signup — browser-based conversion."
-  canonical="/tools/jpg-to-pdf"
+  title="PAN Card Photo Resize Online Free | JaldiDocs"
+  description="Resize your photo to the correct size for PAN card applications (NSDL/UTIITSL). Free, browser-based, no upload required. No personal data collected."
+  canonical="/tools/pan-card-photo-resize"
 >
   <ToolHeader
     client:load
-    name="JPG to PDF"
-    description="Convert one or multiple JPG, PNG or WEBP images into a single PDF. Upload images, reorder them, choose page size and orientation, then download your PDF."
-    breadcrumb={[{ label: 'PDF Tools', href: '/#pdf-tools' }, { label: 'JPG to PDF', href: '/tools/jpg-to-pdf' }]}
+    name="PAN Card Photo Resize"
+    description="Resize your photo to the standard dimensions for PAN card application portals. Supports custom sizes and file size compression. All processing in your browser."
+    breadcrumb={[{ label: 'Student Tools', href: '/#student-tools' }, { label: 'PAN Card Photo Resize', href: '/tools/pan-card-photo-resize' }]}
   />
 
-  <JpgToPdf client:load />
+  <PhotoResizeTool
+    client:load
+    toolName="PAN Card Photo Resize"
+    presets={presets}
+    disclaimer="This is a general image resize tool. JaldiDocs is not affiliated with NSDL, UTIITSL, or the Income Tax Department. Please verify the exact photo requirements on the official portal before submitting. Do not enter your PAN number in this tool."
+    helpText="JPG, PNG or WEBP • Passport-style, white background, recent photo"
+  />
 
   <div slot="seo-content">
     <AdSlot client:load className="mb-10" />
 
     <div class="prose-tool mt-4">
-      <h2>Convert Images to PDF in Your Browser</h2>
+      <h2>Photo Requirements for PAN Card Application</h2>
       <p>
-        This tool converts JPG, PNG and WEBP images into a standard PDF file without uploading anything to
-        a server. It works entirely in your browser using modern web technology. This is ideal when you need
-        to submit multiple photos as a single document.
+        A PAN card application requires a recent passport-type photograph with a plain white background.
+        Both eyes should be open and clearly visible. The face should be centred. The standard photo size
+        is 3.5cm × 3.5cm.
+      </p>
+      <p>
+        Always verify the current requirements on the official portal:
+        NSDL (tin-nsdl.com) or UTIITSL (utiitsl.com), as specifications may change.
       </p>
 
-      <h2>Common Use Cases in India</h2>
+      <h2>Common Uses</h2>
       <ul>
-        <li>Combining marksheet photos and certificate photos for college admissions</li>
-        <li>Converting scanned documents into a single PDF for government portals</li>
-        <li>Submitting multiple ID proof photos as one document for bank KYC</li>
-        <li>Creating a photo album or presentation in PDF format</li>
-        <li>Combining property photos for a rental or sale document</li>
+        <li>New PAN card application (Form 49A for Indian citizens)</li>
+        <li>PAN card correction or reprint application</li>
+        <li>e-PAN download portal photo verification</li>
+        <li>Income tax portal account photo upload</li>
       </ul>
 
-      <h2>How to Convert JPG to PDF</h2>
-      <ol class="list-decimal list-inside space-y-1.5 my-3 text-sm text-secondary">
-        <li>Click "Choose Files" or drag your images into the upload area</li>
-        <li>Use the arrows to reorder pages if needed</li>
-        <li>Choose page size (A4 is standard), orientation and margin</li>
-        <li>Click "Create PDF" — the download will start automatically</li>
-      </ol>
-
-      <h2>Tips</h2>
-      <ul>
-        <li>For official documents, use A4 portrait with a small or medium margin</li>
-        <li>Use "Fit to image" when you want the PDF to preserve the exact image proportions</li>
-        <li>If images are very large, compress them first using the Image Compress tool</li>
-        <li>PNG images preserve quality better but produce larger PDFs than JPG</li>
-      </ul>
+      <h2>Important Note</h2>
+      <p>
+        JaldiDocs does not collect PAN numbers or any personal identity information. This tool only
+        processes your photograph. For any issues with your PAN application, contact NSDL or UTIITSL
+        directly.
+      </p>
     </div>
 
-    <FAQSection client:load faqs={faqs} title="JPG to PDF — FAQs" />
-    <RelatedTools client:load tools={relatedTools} currentId="jpg-to-pdf" />
+    <FAQSection client:load faqs={faqs} title="PAN Card Photo — FAQs" />
+    <RelatedTools client:load tools={relatedTools} currentId="pan-card-photo-resize" />
   </div>
 </ToolLayout>

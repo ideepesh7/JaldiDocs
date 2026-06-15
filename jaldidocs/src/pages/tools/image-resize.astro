@@ -1,75 +1,74 @@
 ---
-// src/pages/tools/jpg-to-pdf.astro
+// src/pages/tools/image-resize.astro
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import ToolHeader from '../../components/ui/ToolHeader';
-import JpgToPdf from '../../components/tools/JpgToPdf';
+import ImageResize from '../../components/tools/ImageResize';
 import FAQSection from '../../components/ui/FAQSection';
 import RelatedTools from '../../components/ui/RelatedTools';
 import AdSlot from '../../components/ui/AdSlot';
+import { Maximize2 } from 'lucide-react';
 import { TOOLS } from '../../data/tools';
+import { IMAGE_RESIZE_FAQS } from '../../data/faqs';
 
-const faqs = [
-  { question: 'How many images can I convert at once?', answer: 'You can add as many images as you need. However, for best performance in the browser, keep the combined file size under 50MB. Very large image sets may be slow on older devices.' },
-  { question: 'Will image quality be reduced in the PDF?', answer: 'The tool converts images at 92% quality which is visually excellent for most uses. If you need lossless quality, use PNG format images as input.' },
-  { question: 'Can I reorder the images before converting?', answer: 'Yes. Use the up and down arrows next to each image to reorder them. The PDF pages will follow the same order as your image list.' },
-  { question: 'What page size should I use?', answer: 'A4 is the standard for India (office documents, resumes, applications). Use "Fit to image" if you want the PDF pages to exactly match each image\'s dimensions.' },
-];
-
-const relatedTools = TOOLS.filter(t => ['merge-pdf', 'pdf-compressor', 'image-resize', 'image-compress'].includes(t.id));
+const relatedTools = TOOLS.filter(t => ['image-compress', 'passport-photo-maker', 'signature-resize', 'jpg-to-pdf'].includes(t.id));
 ---
 
 <ToolLayout
-  title="JPG to PDF Converter Online Free - Images to PDF | JaldiDocs"
-  description="Convert multiple JPG, PNG and WEBP images into a single PDF file. Set page size, orientation and margin. Free, no upload, no signup — browser-based conversion."
-  canonical="/tools/jpg-to-pdf"
+  title="Resize Image Online Free - JPG, PNG, WEBP Resizer | JaldiDocs"
+  description="Resize JPG, PNG and WEBP images to exact dimensions for free. No signup, no upload — all processing done in your browser. Perfect for exam forms, job portals and government websites."
+  canonical="/tools/image-resize"
 >
   <ToolHeader
     client:load
-    name="JPG to PDF"
-    description="Convert one or multiple JPG, PNG or WEBP images into a single PDF. Upload images, reorder them, choose page size and orientation, then download your PDF."
-    breadcrumb={[{ label: 'PDF Tools', href: '/#pdf-tools' }, { label: 'JPG to PDF', href: '/tools/jpg-to-pdf' }]}
+    name="Image Resize"
+    description="Resize any JPG, PNG or WEBP image to exact dimensions. Set a preset or enter custom width and height. Your file is processed entirely in your browser and never uploaded."
+    breadcrumb={[{ label: 'Image Tools', href: '/#image-tools' }, { label: 'Image Resize', href: '/tools/image-resize' }]}
   />
 
-  <JpgToPdf client:load />
+  <ImageResize client:load />
 
   <div slot="seo-content">
+    <!-- Top ad slot — safe distance from tool -->
     <AdSlot client:load className="mb-10" />
 
     <div class="prose-tool mt-4">
-      <h2>Convert Images to PDF in Your Browser</h2>
+      <h2>What is Image Resize?</h2>
       <p>
-        This tool converts JPG, PNG and WEBP images into a standard PDF file without uploading anything to
-        a server. It works entirely in your browser using modern web technology. This is ideal when you need
-        to submit multiple photos as a single document.
+        Image Resize lets you change the width and height of a photo or image to any dimension you need.
+        Whether you need a specific pixel size for an online form or want to reduce dimensions to save space,
+        this tool does it instantly in your browser.
       </p>
 
-      <h2>Common Use Cases in India</h2>
-      <ul>
-        <li>Combining marksheet photos and certificate photos for college admissions</li>
-        <li>Converting scanned documents into a single PDF for government portals</li>
-        <li>Submitting multiple ID proof photos as one document for bank KYC</li>
-        <li>Creating a photo album or presentation in PDF format</li>
-        <li>Combining property photos for a rental or sale document</li>
-      </ul>
-
-      <h2>How to Convert JPG to PDF</h2>
+      <h2>How to Resize an Image</h2>
       <ol class="list-decimal list-inside space-y-1.5 my-3 text-sm text-secondary">
-        <li>Click "Choose Files" or drag your images into the upload area</li>
-        <li>Use the arrows to reorder pages if needed</li>
-        <li>Choose page size (A4 is standard), orientation and margin</li>
-        <li>Click "Create PDF" — the download will start automatically</li>
+        <li>Click "Choose File" or drag your image into the upload area</li>
+        <li>Select a preset size or enter your own width and height in pixels</li>
+        <li>Toggle aspect ratio lock to maintain proportions automatically</li>
+        <li>Choose your output format (JPG, PNG or WEBP) and quality</li>
+        <li>Click "Resize Image" and download the result</li>
       </ol>
 
-      <h2>Tips</h2>
+      <h2>Common Resize Sizes for Indian Forms</h2>
       <ul>
-        <li>For official documents, use A4 portrait with a small or medium margin</li>
-        <li>Use "Fit to image" when you want the PDF to preserve the exact image proportions</li>
-        <li>If images are very large, compress them first using the Image Compress tool</li>
-        <li>PNG images preserve quality better but produce larger PDFs than JPG</li>
+        <li><strong>Passport / Visa photo:</strong> 35mm × 45mm (approximately 413 × 531 px at 300 DPI)</li>
+        <li><strong>SSC / UPSC / State PSC exams:</strong> Usually 200×230 px or 3.5cm × 4.5cm, under 50KB</li>
+        <li><strong>NEET, JEE, CUET:</strong> Check the notification — typically 3.5×4.5cm, 10KB–200KB</li>
+        <li><strong>Job portals (Naukri, LinkedIn):</strong> 400×400 px square is safe</li>
+        <li><strong>Aadhaar enrolment:</strong> Typically 200×200 px, under 200KB</li>
+      </ul>
+
+      <h2>Tips for Best Results</h2>
+      <ul>
+        <li>Use JPG format for photos — it gives the best file-size-to-quality ratio</li>
+        <li>Use PNG for images with sharp edges, text, or transparent backgrounds</li>
+        <li>For government forms, always check the official notification for the exact size and file size limit</li>
+        <li>If the portal gives a dimension in cm, use 300 DPI to calculate pixels (e.g. 3.5cm = ~413px)</li>
+        <li>Do not enlarge a small image — this will make it blurry without adding detail</li>
       </ul>
     </div>
 
-    <FAQSection client:load faqs={faqs} title="JPG to PDF — FAQs" />
-    <RelatedTools client:load tools={relatedTools} currentId="jpg-to-pdf" />
+    <FAQSection client:load faqs={IMAGE_RESIZE_FAQS} title="Image Resize — Frequently Asked Questions" />
+
+    <RelatedTools client:load tools={relatedTools} currentId="image-resize" />
   </div>
 </ToolLayout>
