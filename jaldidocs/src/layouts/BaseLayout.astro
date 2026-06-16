@@ -1,4 +1,4 @@
-﻿---
+---
 import '../styles/global.css';
 
 export interface Props {
@@ -99,12 +99,21 @@ const ogImg = `${siteUrl}/og-image.png`;
     <!--
       <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1216717046772945" crossorigin="anonymous"></script>
     -->
-  </head>
+  <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G03CXT45JZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G03CXT45JZ');
+</script>
+</head>
 
   <body>
     <slot />
   </body>
 </html>
+
 
 
 
