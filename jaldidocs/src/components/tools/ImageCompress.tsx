@@ -5,6 +5,7 @@ import UploadDropzone from '../ui/UploadDropzone';
 import {
   canvasToBlob,
   compressCanvasToTarget,
+  detectImageUseCase,
   downloadUrl,
   getCanvasContext,
   loadImage as loadCanvasImage,
@@ -13,6 +14,7 @@ import {
   safeCanvasSize,
   safeDownloadName,
   smartImageQuality,
+  suggestedTargetKB,
 } from '../../lib/imageProcessing';
 
 interface ImageInfo {
@@ -61,7 +63,10 @@ export default function ImageCompress() {
     const url = URL.createObjectURL(file);
     const img = new window.Image();
     img.onload = () => {
-      setQuality(smartImageQuality(file, img.naturalWidth, img.naturalHeight, 'share'));
+      const useCase = detectImageUseCase(file, img.naturalWidth, img.naturalHeight);
+      const qualityMode = useCase === 'document' || useCase === 'signature' ? 'document' : 'share';
+      setQuality(smartImageQuality(file, img.naturalWidth, img.naturalHeight, qualityMode));
+      if (!targetKB) setTargetKB(String(suggestedTargetKB(file, img.naturalWidth, img.naturalHeight, useCase)));
       setImage({ file, url, width: img.naturalWidth, height: img.naturalHeight });
     };
     img.onerror = () => {
@@ -92,8 +97,9 @@ export default function ImageCompress() {
       let blob: Blob;
 
       if (targetKB && Number(targetKB) > 0) {
+        const minQuality = detectImageUseCase(image.file, image.width, image.height) === 'document' ? 0.28 : 0.12;
         blob = await compressCanvasToTarget(canvas, mime, Number(targetKB) * 1024, {
-          minQuality: 0.12,
+          minQuality,
           maxQuality: 0.96,
           allowDownscale: true,
         });

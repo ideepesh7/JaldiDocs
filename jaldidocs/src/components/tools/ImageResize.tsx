@@ -4,6 +4,7 @@ import { Maximize2, Download, RotateCcw, Lock, Unlock } from 'lucide-react';
 import UploadDropzone from '../ui/UploadDropzone';
 import {
   canvasToBlob,
+  detectImageUseCase,
   downloadUrl,
   getCanvasContext,
   loadImage as loadCanvasImage,
@@ -61,10 +62,11 @@ export default function ImageResize() {
     const url = URL.createObjectURL(file);
     const img = new window.Image();
     img.onload = () => {
+      const useCase = detectImageUseCase(file, img.naturalWidth, img.naturalHeight);
       setImage({ file, url, width: img.naturalWidth, height: img.naturalHeight });
       setWidth(String(img.naturalWidth));
       setHeight(String(img.naturalHeight));
-      setQuality(smartImageQuality(file, img.naturalWidth, img.naturalHeight, 'document'));
+      setQuality(smartImageQuality(file, img.naturalWidth, img.naturalHeight, useCase === 'photo' ? 'photo' : 'document'));
     };
     img.onerror = () => {
       revokeUrl(url);

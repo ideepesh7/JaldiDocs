@@ -9,6 +9,7 @@ interface UploadDropzoneProps {
   label?: string;
   helpText?: string;
   maxSizeMB?: number;
+  maxFiles?: number;
   icon?: React.ReactNode;
 }
 
@@ -19,6 +20,7 @@ export default function UploadDropzone({
   label = 'Drop files here or click to browse',
   helpText,
   maxSizeMB = 50,
+  maxFiles,
   icon,
 }: UploadDropzoneProps) {
   const [isDragOver, setIsDragOver] = useState(false);
@@ -29,24 +31,38 @@ export default function UploadDropzone({
     if (!files || files.length === 0) return;
     setError('');
 
-    const acceptedTypes = accept.split(',').map((a) => a.trim().toLowerCase());
+    const acceptedTypes = accept.split(',').map((a) => a.trim().toLowerCase()).filter(Boolean);
     const validFiles: File[] = [];
+    const seen = new Set<string>();
 
     for (const file of Array.from(files)) {
-      const ext = '.' + file.name.split('.').pop()?.toLowerCase();
+      if (maxFiles && validFiles.length >= maxFiles) {
+        setError(`Only ${maxFiles} file${maxFiles === 1 ? '' : 's'} can be added at once.`);
+        break;
+      }
+
+      const extPart = file.name.includes('.') ? file.name.split('.').pop()?.toLowerCase() : '';
+      const ext = extPart ? `.${extPart}` : '';
       const mime = file.type.toLowerCase();
       const isValid = acceptedTypes.some(
         (a) => a === ext || (mime && a === mime) || (a.endsWith('/*') && mime.startsWith(a.slice(0, -1)))
       );
+      const signature = `${file.name}-${file.size}-${file.lastModified}`;
 
       if (!isValid) {
         setError(`File "${file.name}" is not a supported type.`);
+        continue;
+      }
+      if (file.size <= 0) {
+        setError(`File "${file.name}" appears to be empty.`);
         continue;
       }
       if (file.size > maxSizeMB * 1024 * 1024) {
         setError(`File "${file.name}" exceeds ${maxSizeMB}MB limit.`);
         continue;
       }
+      if (seen.has(signature)) continue;
+      seen.add(signature);
       validFiles.push(file);
     }
 

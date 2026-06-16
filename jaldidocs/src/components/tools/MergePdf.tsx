@@ -108,6 +108,7 @@ export default function MergePdf() {
           label={pdfs.length > 0 ? 'Add more PDFs' : 'Drop PDF files here or click to choose'}
           helpText="Select multiple PDF files to merge"
           maxSizeMB={100}
+          maxFiles={30}
           icon={<Combine className="w-6 h-6" />}
         />
       </div>

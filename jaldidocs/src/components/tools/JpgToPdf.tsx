@@ -179,6 +179,7 @@ export default function JpgToPdf() {
           label={images.length > 0 ? 'Add more images' : 'Drop images here or click to choose'}
           helpText="Supports JPG, PNG and WEBP • Select multiple files"
           maxSizeMB={50}
+          maxFiles={50}
           icon={<FileImage className="w-6 h-6" />}
         />
       </div>

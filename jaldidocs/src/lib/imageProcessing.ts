@@ -13,6 +13,19 @@ export interface DrawRect {
 
 export const MAX_CANVAS_PIXELS = 16_000_000;
 export const MAX_LONG_EDGE = 4096;
+export const WHATSAPP_LONG_EDGE = 1600;
+
+export type ImageUseCase = 'photo' | 'document' | 'signature' | 'screenshot' | 'share';
+
+export function detectImageUseCase(file: File, width: number, height: number): ImageUseCase {
+  const name = file.name.toLowerCase();
+  const aspect = width / Math.max(1, height);
+
+  if (/signature|sign|sig/.test(name) || aspect > 2.2) return 'signature';
+  if (/aadhaar|adhar|pan|passport|visa|id|document|doc|certificate|marksheet/.test(name)) return 'document';
+  if (/screenshot|screen|capture/.test(name)) return 'screenshot';
+  return 'photo';
+}
 
 export function smartImageQuality(file: File, width: number, height: number, mode: 'photo' | 'document' | 'share' = 'photo') {
   const megapixels = (width * height) / 1_000_000;
@@ -34,6 +47,17 @@ export function smartImageQuality(file: File, width: number, height: number, mod
   if (megapixels > 5 || sizeMB > 4) return 82;
   if (megapixels > 2 || sizeMB > 2) return 86;
   return 90;
+}
+
+export function suggestedTargetKB(file: File, width: number, height: number, useCase: ImageUseCase) {
+  const originalKB = file.size / 1024;
+
+  if (useCase === 'signature') return Math.min(50, Math.max(20, Math.round(originalKB * 0.45)));
+  if (useCase === 'document') return Math.min(300, Math.max(80, Math.round(originalKB * 0.5)));
+  if (useCase === 'screenshot') return Math.min(500, Math.max(120, Math.round(originalKB * 0.6)));
+  if (width > WHATSAPP_LONG_EDGE || height > WHATSAPP_LONG_EDGE) return Math.min(350, Math.max(120, Math.round(originalKB * 0.4)));
+
+  return Math.min(500, Math.max(100, Math.round(originalKB * 0.55)));
 }
 
 export function safeCanvasSize(width: number, height: number, maxLongEdge = MAX_LONG_EDGE, maxPixels = MAX_CANVAS_PIXELS) {

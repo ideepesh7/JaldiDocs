@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FileDown, Download, RotateCcw, AlertCircle, Info } from 'lucide-react';
 import UploadDropzone from '../ui/UploadDropzone';
 import { downloadBlob, loadPdfSafely, savePdfSafely } from '../../lib/pdfProcessing';
+import { safeFilePart } from '../../lib/toolRuntime';
 
 interface PdfInfo {
   file: File;
@@ -52,7 +53,7 @@ export default function PdfCompressor() {
 
   const download = () => {
     if (!result) return;
-    downloadBlob(result.blob, `compressed-${pdf?.file.name || 'document.pdf'}`);
+    downloadBlob(result.blob, `compressed-${safeFilePart(pdf?.file.name || 'document', 'document')}.pdf`);
   };
 
   const reset = () => {
