@@ -1,17 +1,1 @@
-# ads.txt — JaldiDocs
-#
-# This file is a PLACEHOLDER for future Google AdSense integration.
-#
-# INSTRUCTIONS (after AdSense approval):
-# 1. Log in to your Google AdSense account at adsense.google.com
-# 2. Go to Account > Account information and copy your Publisher ID (ca-pub-XXXXXXXXXXXXXXXXX)
-# 3. Replace this entire file with one line in the format below:
-#
-#    google.com, pub-XXXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
-#
-# Replace XXXXXXXXXXXXXXXXX with your actual 16-digit AdSense Publisher ID.
-# Do NOT add any other content to this file.
-# Place this file at the root of your domain: https://yourdomain.com/ads.txt
-#
-# DO NOT use a fake or placeholder publisher ID — it violates AdSense policies.
-# Leave this file as-is (comments only) until you have a real AdSense account.
+google.com, pub-1216717046772945, DIRECT, f08c47fec0942fa0
