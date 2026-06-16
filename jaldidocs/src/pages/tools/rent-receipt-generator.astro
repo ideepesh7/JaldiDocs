@@ -6,7 +6,7 @@ import RentReceiptGenerator from '../../components/tools/RentReceiptGenerator';
 import FAQSection from '../../components/ui/FAQSection';
 import RelatedTools from '../../components/ui/RelatedTools';
 import AdSlot from '../../components/ui/AdSlot';
-import { TOOLS } from '../../data/tools';
+import { getRelatedTools } from '../../lib/relatedTools';
 
 const faqs = [
   { question: 'Is this rent receipt valid for HRA exemption?', answer: 'The rent receipt generated here follows a standard format suitable for HRA claims. However, for tax exemption purposes, consult your employer\'s HR or a CA. Rent receipts above ₹1 lakh per year require the landlord\'s PAN.' },
@@ -15,7 +15,7 @@ const faqs = [
   { question: 'Can I generate receipts for multiple months?', answer: 'Yes. Change the month and receipt number for each month, click "Download PDF" separately for each. Optionally save a draft to preserve your landlord and address details across months.' },
 ];
 
-const relatedTools = TOOLS.filter(t => ['invoice-maker', 'merge-pdf', 'pdf-compressor', 'jpg-to-pdf'].includes(t.id));
+const relatedTools = getRelatedTools('rent-receipt-generator');
 ---
 
 <ToolLayout

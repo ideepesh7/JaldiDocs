@@ -6,10 +6,10 @@ import ImageCompress from '../../components/tools/ImageCompress';
 import FAQSection from '../../components/ui/FAQSection';
 import RelatedTools from '../../components/ui/RelatedTools';
 import AdSlot from '../../components/ui/AdSlot';
-import { TOOLS } from '../../data/tools';
+import { getRelatedTools } from '../../lib/relatedTools';
 import { IMAGE_COMPRESS_FAQS } from '../../data/faqs';
 
-const relatedTools = TOOLS.filter(t => ['image-resize', 'passport-photo-maker', 'signature-resize', 'jpg-to-pdf'].includes(t.id));
+const relatedTools = getRelatedTools('image-compress');
 ---
 
 <ToolLayout

@@ -4,6 +4,7 @@ import BaseLayout from './BaseLayout.astro';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import AdSlot from '../components/ui/AdSlot';
+import { TOOLS } from '../data/tools';
 
 export interface Props {
   title: string;
@@ -12,9 +13,81 @@ export interface Props {
 }
 
 const { title, description, canonical } = Astro.props;
+const siteUrl = 'https://jaldidocs.pages.dev';
+const normalizePath = (path: string) => {
+  if (path === '/') return '/';
+  const withLeadingSlash = path.startsWith('/') ? path : `/${path}`;
+  return withLeadingSlash.endsWith('/') ? withLeadingSlash : `${withLeadingSlash}/`;
+};
+const canonicalPath = normalizePath(canonical || Astro.url.pathname);
+const canonicalUrl = `${siteUrl}${canonicalPath}`;
+const currentTool = TOOLS.find((tool) => tool.slug === canonicalPath);
+const categoryLabel = currentTool
+  ? {
+      pdf: 'PDF Tools',
+      image: 'Image Tools',
+      business: 'Business Tools',
+      student: 'Student Tools',
+    }[currentTool.category]
+  : undefined;
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical}>
+  {currentTool && (
+    <>
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebApplication',
+          name: currentTool.name,
+          url: canonicalUrl,
+          description: currentTool.description,
+          applicationCategory: categoryLabel,
+          operatingSystem: 'Any',
+          isAccessibleForFree: true,
+          offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'INR',
+          },
+          publisher: {
+            '@type': 'Organization',
+            name: 'JaldiDocs',
+            url: siteUrl,
+          },
+        })}
+      />
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'JaldiDocs',
+              item: `${siteUrl}/`,
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: categoryLabel,
+              item: `${siteUrl}/#${currentTool.category}-tools`,
+            },
+            {
+              '@type': 'ListItem',
+              position: 3,
+              name: currentTool.name,
+              item: canonicalUrl,
+            },
+          ],
+        })}
+      />
+    </>
+  )}
+
   <Navbar client:load />
 
   <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

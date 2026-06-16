@@ -1,5 +1,5 @@
 // src/components/tools/ImageResize.tsx
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Maximize2, Download, RotateCcw, Lock, Unlock } from 'lucide-react';
 import UploadDropzone from '../ui/UploadDropzone';
 import {
@@ -41,11 +41,16 @@ export default function ImageResize() {
   const [outputSize, setOutputSize] = useState('');
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
+  const urlsRef = useRef<{ image?: string; output?: string }>({});
+
+  useEffect(() => {
+    urlsRef.current = { image: image?.url, output: outputUrl };
+  }, [image?.url, outputUrl]);
 
   useEffect(() => () => {
-    revokeUrl(image?.url);
-    revokeUrl(outputUrl);
-  }, [image?.url, outputUrl]);
+    revokeUrl(urlsRef.current.image);
+    revokeUrl(urlsRef.current.output);
+  }, []);
 
   const loadImage = useCallback((files: File[]) => {
     const file = files[0];

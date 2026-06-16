@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FileImage, Download, ArrowUp, ArrowDown, X } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import { PDFDocument } from 'pdf-lib';
@@ -7,12 +7,11 @@ import {
   getCanvasContext,
   loadImage as loadCanvasImage,
   makeCanvas,
-  naturalFileSort,
   revokeUrl,
   safeCanvasSize,
   yieldToBrowser,
 } from '../../lib/imageProcessing';
-import { downloadBlob } from '../../lib/pdfProcessing';
+import { downloadBlob, naturalFileSort } from '../../lib/pdfProcessing';
 
 interface ImageFile {
   id: string;
@@ -34,10 +33,15 @@ export default function JpgToPdf() {
   const [margin, setMargin] = useState<Margin>('small');
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
+  const imagesRef = useRef<ImageFile[]>([]);
+
+  useEffect(() => {
+    imagesRef.current = images;
+  }, [images]);
 
   useEffect(() => () => {
-    images.forEach((image) => revokeUrl(image.url));
-  }, [images]);
+    imagesRef.current.forEach((image) => revokeUrl(image.url));
+  }, []);
 
   const addImages = (files: File[]) => {
     const existing = new Set(images.map((image) => `${image.name}-${image.file.size}`));

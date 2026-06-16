@@ -6,7 +6,7 @@ import PhotoResizeTool from '../../components/tools/PhotoResizeTool';
 import FAQSection from '../../components/ui/FAQSection';
 import RelatedTools from '../../components/ui/RelatedTools';
 import AdSlot from '../../components/ui/AdSlot';
-import { TOOLS } from '../../data/tools';
+import { getRelatedTools } from '../../lib/relatedTools';
 
 const faqs = [
   { question: 'What photo size does Aadhaar enrolment require?', answer: 'UIDAI typically requires a colour photo with a light background. The exact pixel dimensions vary by the enrolment software version. A safe standard is 200×200 px to 350×350 px, JPEG format, under 200KB. Always verify at the enrolment centre.' },
@@ -21,7 +21,7 @@ const presets = [
   { label: '413×531 px', w: 413, h: 531, note: '35×45mm at 300dpi' },
 ];
 
-const relatedTools = TOOLS.filter(t => ['image-resize', 'image-compress', 'passport-photo-maker', 'pan-card-photo-resize'].includes(t.id));
+const relatedTools = getRelatedTools('aadhaar-photo-resize');
 ---
 
 <ToolLayout

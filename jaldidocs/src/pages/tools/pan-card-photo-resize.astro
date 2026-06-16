@@ -6,7 +6,7 @@ import PhotoResizeTool from '../../components/tools/PhotoResizeTool';
 import FAQSection from '../../components/ui/FAQSection';
 import RelatedTools from '../../components/ui/RelatedTools';
 import AdSlot from '../../components/ui/AdSlot';
-import { TOOLS } from '../../data/tools';
+import { getRelatedTools } from '../../lib/relatedTools';
 
 const faqs = [
   { question: 'What photo size is required for a PAN card?', answer: 'For new PAN card applications via NSDL or UTIITSL, the passport-type photo should typically be 3.5cm × 3.5cm (approximately 413×413 px at 300 DPI). The digital upload usually requires JPEG format under 50KB–100KB. Check the specific portal for current requirements.' },
@@ -21,7 +21,7 @@ const presets = [
   { label: '413×531 px', w: 413, h: 531, note: '35×45mm passport' },
 ];
 
-const relatedTools = TOOLS.filter(t => ['image-resize', 'image-compress', 'passport-photo-maker', 'aadhaar-photo-resize'].includes(t.id));
+const relatedTools = getRelatedTools('pan-card-photo-resize');
 ---
 
 <ToolLayout

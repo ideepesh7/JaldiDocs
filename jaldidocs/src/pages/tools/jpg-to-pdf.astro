@@ -6,7 +6,7 @@ import JpgToPdf from '../../components/tools/JpgToPdf';
 import FAQSection from '../../components/ui/FAQSection';
 import RelatedTools from '../../components/ui/RelatedTools';
 import AdSlot from '../../components/ui/AdSlot';
-import { TOOLS } from '../../data/tools';
+import { getRelatedTools } from '../../lib/relatedTools';
 
 const faqs = [
   { question: 'How many images can I convert at once?', answer: 'You can add as many images as you need. However, for best performance in the browser, keep the combined file size under 50MB. Very large image sets may be slow on older devices.' },
@@ -15,7 +15,7 @@ const faqs = [
   { question: 'What page size should I use?', answer: 'A4 is the standard for India (office documents, resumes, applications). Use "Fit to image" if you want the PDF pages to exactly match each image\'s dimensions.' },
 ];
 
-const relatedTools = TOOLS.filter(t => ['merge-pdf', 'pdf-compressor', 'image-resize', 'image-compress'].includes(t.id));
+const relatedTools = getRelatedTools('jpg-to-pdf');
 ---
 
 <ToolLayout

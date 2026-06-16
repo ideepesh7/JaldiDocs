@@ -1,5 +1,5 @@
 // src/components/tools/ImageCompress.tsx
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Minimize2, Download, RotateCcw, TrendingDown } from 'lucide-react';
 import UploadDropzone from '../ui/UploadDropzone';
 import {
@@ -38,14 +38,19 @@ export default function ImageCompress() {
   const [outputSize, setOutputSize] = useState(0);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
+  const urlsRef = useRef<{ image?: string; output?: string }>({});
 
   const fmtSize = (bytes: number) =>
     bytes < 1024 * 1024 ? `${(bytes / 1024).toFixed(1)} KB` : `${(bytes / 1024 / 1024).toFixed(2)} MB`;
 
-  useEffect(() => () => {
-    revokeUrl(image?.url);
-    revokeUrl(outputUrl);
+  useEffect(() => {
+    urlsRef.current = { image: image?.url, output: outputUrl };
   }, [image?.url, outputUrl]);
+
+  useEffect(() => () => {
+    revokeUrl(urlsRef.current.image);
+    revokeUrl(urlsRef.current.output);
+  }, []);
 
   const loadImage = useCallback((files: File[]) => {
     const file = files[0];

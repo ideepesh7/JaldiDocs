@@ -40,11 +40,16 @@ export default function PassportPhotoMaker() {
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const urlsRef = useRef<{ image?: string; output?: string }>({});
+
+  useEffect(() => {
+    urlsRef.current = { image: imageUrl, output: outputUrl };
+  }, [imageUrl, outputUrl]);
 
   useEffect(() => () => {
-    revokeUrl(imageUrl);
-    revokeUrl(outputUrl);
-  }, [imageUrl, outputUrl]);
+    revokeUrl(urlsRef.current.image);
+    revokeUrl(urlsRef.current.output);
+  }, []);
 
   const loadImage = useCallback((files: File[]) => {
     const file = files[0];

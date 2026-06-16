@@ -6,10 +6,10 @@ import PassportPhotoMaker from '../../components/tools/PassportPhotoMaker';
 import FAQSection from '../../components/ui/FAQSection';
 import RelatedTools from '../../components/ui/RelatedTools';
 import AdSlot from '../../components/ui/AdSlot';
-import { TOOLS } from '../../data/tools';
+import { getRelatedTools } from '../../lib/relatedTools';
 import { PASSPORT_FAQS } from '../../data/faqs';
 
-const relatedTools = TOOLS.filter(t => ['image-resize', 'image-compress', 'aadhaar-photo-resize', 'pan-card-photo-resize'].includes(t.id));
+const relatedTools = getRelatedTools('passport-photo-maker');
 ---
 
 <ToolLayout

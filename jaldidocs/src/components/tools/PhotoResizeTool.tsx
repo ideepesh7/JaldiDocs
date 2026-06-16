@@ -1,6 +1,6 @@
 // src/components/tools/PhotoResizeTool.tsx
 // Reusable component used for Aadhaar Photo Resize, PAN Card Photo Resize, and similar tools.
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { CreditCard, Download, RotateCcw, Lock, Unlock, AlertTriangle } from 'lucide-react';
 import UploadDropzone from '../ui/UploadDropzone';
 import {
@@ -47,11 +47,16 @@ export default function PhotoResizeTool({
   const [outputSize, setOutputSize] = useState(0);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
+  const urlsRef = useRef<{ image?: string; output?: string }>({});
+
+  useEffect(() => {
+    urlsRef.current = { image: image?.url, output: outputUrl };
+  }, [image?.url, outputUrl]);
 
   useEffect(() => () => {
-    revokeUrl(image?.url);
-    revokeUrl(outputUrl);
-  }, [image?.url, outputUrl]);
+    revokeUrl(urlsRef.current.image);
+    revokeUrl(urlsRef.current.output);
+  }, []);
 
   const loadImage = useCallback((files: File[]) => {
     const file = files[0];

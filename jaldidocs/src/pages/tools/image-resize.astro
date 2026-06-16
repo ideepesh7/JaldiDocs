@@ -7,10 +7,10 @@ import FAQSection from '../../components/ui/FAQSection';
 import RelatedTools from '../../components/ui/RelatedTools';
 import AdSlot from '../../components/ui/AdSlot';
 import { Maximize2 } from 'lucide-react';
-import { TOOLS } from '../../data/tools';
+import { getRelatedTools } from '../../lib/relatedTools';
 import { IMAGE_RESIZE_FAQS } from '../../data/faqs';
 
-const relatedTools = TOOLS.filter(t => ['image-compress', 'passport-photo-maker', 'signature-resize', 'jpg-to-pdf'].includes(t.id));
+const relatedTools = getRelatedTools('image-resize');
 ---
 
 <ToolLayout

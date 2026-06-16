@@ -6,10 +6,10 @@ import InvoiceMaker from '../../components/tools/InvoiceMaker';
 import FAQSection from '../../components/ui/FAQSection';
 import RelatedTools from '../../components/ui/RelatedTools';
 import AdSlot from '../../components/ui/AdSlot';
-import { TOOLS } from '../../data/tools';
+import { getRelatedTools } from '../../lib/relatedTools';
 import { INVOICE_FAQS } from '../../data/faqs';
 
-const relatedTools = TOOLS.filter(t => ['rent-receipt-generator', 'merge-pdf', 'jpg-to-pdf', 'pdf-compressor'].includes(t.id));
+const relatedTools = getRelatedTools('invoice-maker');
 ---
 
 <ToolLayout

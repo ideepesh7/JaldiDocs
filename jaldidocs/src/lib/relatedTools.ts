@@ -1,4 +1,4 @@
-import { TOOLS } from '../data/tools';
+import { TOOLS, type Tool } from '../data/tools';
 
 const relatedPriority: Record<string, string[]> = {
   'image-resize': ['image-compress', 'passport-photo-maker', 'signature-resize', 'jpg-to-pdf'],
@@ -14,14 +14,18 @@ const relatedPriority: Record<string, string[]> = {
   'rent-receipt-generator': ['invoice-maker', 'pdf-compressor', 'merge-pdf', 'jpg-to-pdf'],
 };
 
-export function getRelatedTools(currentId: string, limit = 4) {
+function isTool(tool: Tool | undefined): tool is Tool {
+  return Boolean(tool);
+}
+
+export function getRelatedTools(currentId: string, limit = 4): Tool[] {
   const current = TOOLS.find((tool) => tool.id === currentId);
   const priority = relatedPriority[currentId] || [];
   const selected = new Set<string>();
 
   const related = priority
     .map((id) => TOOLS.find((tool) => tool.id === id))
-    .filter(Boolean)
+    .filter(isTool)
     .filter((tool) => {
       if (!tool || tool.id === currentId || selected.has(tool.id)) return false;
       selected.add(tool.id);

@@ -6,7 +6,7 @@ import SignatureResize from '../../components/tools/SignatureResize';
 import FAQSection from '../../components/ui/FAQSection';
 import RelatedTools from '../../components/ui/RelatedTools';
 import AdSlot from '../../components/ui/AdSlot';
-import { TOOLS } from '../../data/tools';
+import { getRelatedTools } from '../../lib/relatedTools';
 
 const faqs = [
   { question: 'What size should a signature be for exam forms?', answer: 'Most government exam portals require a scanned signature between 140×60 px to 200×80 px and under 20KB–50KB. Always check the specific exam notification for the exact requirement.' },
@@ -15,7 +15,7 @@ const faqs = [
   { question: 'My signature file is too large even after compression. What should I do?', answer: 'Try reducing the target size further (e.g. Under 20KB) and ensure you select JPG as the output format. If the signature still exceeds the limit, also reduce the dimensions using the preset sizes.' },
 ];
 
-const relatedTools = TOOLS.filter(t => ['image-resize', 'image-compress', 'passport-photo-maker', 'aadhaar-photo-resize'].includes(t.id));
+const relatedTools = getRelatedTools('signature-resize');
 ---
 
 <ToolLayout
