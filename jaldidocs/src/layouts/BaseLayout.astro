@@ -1,5 +1,4 @@
----
-// src/layouts/BaseLayout.astro
+﻿---
 import '../styles/global.css';
 
 export interface Props {
@@ -20,7 +19,7 @@ const {
   noindex = false,
 } = Astro.props;
 
-const siteUrl = 'https://jaldi-docs.pages.dev';
+const siteUrl = 'https://jaldidocs.pages.dev';
 const canonicalUrl = canonical ? `${siteUrl}${canonical}` : `${siteUrl}${Astro.url.pathname}`;
 const ogImg = `${siteUrl}/og-image.png`;
 ---
@@ -32,7 +31,7 @@ const ogImg = `${siteUrl}/og-image.png`;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <!-- ✅ Google Site Verification -->
+    <!-- Google Site Verification -->
     <meta name="google-site-verification" content="rHA7BphxscKOlrUHdqJp53x4WuLnNbfPw0FGIyShMTE" />
 
     <title>{title}</title>
@@ -66,20 +65,22 @@ const ogImg = `${siteUrl}/og-image.png`;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <!-- Schema: Organization -->
-    <script type="application/ld+json">
-      {JSON.stringify({
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "JaldiDocs",
         "url": siteUrl,
         "description": "Free PDF, Image & Document Tools for India",
-        "logo": `${siteUrl}/favicon.svg`,
+        "logo": `${siteUrl}/favicon.svg`
       })}
-    </script>
+    />
 
     <!-- Schema: Website -->
-    <script type="application/ld+json">
-      {JSON.stringify({
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "JaldiDocs",
@@ -87,10 +88,10 @@ const ogImg = `${siteUrl}/og-image.png`;
         "potentialAction": {
           "@type": "SearchAction",
           "target": `${siteUrl}/?q={search_term_string}`,
-          "query-input": "required name=search_term_string",
-        },
+          "query-input": "required name=search_term_string"
+        }
       })}
-    </script>
+    />
 
     <!-- ADSENSE PLACEMENT -->
     <!--
