@@ -1,7 +1,18 @@
 // src/components/tools/ImageResize.tsx
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Maximize2, Download, RotateCcw, Lock, Unlock } from 'lucide-react';
 import UploadDropzone from '../ui/UploadDropzone';
+import {
+  canvasToBlob,
+  downloadUrl,
+  getCanvasContext,
+  loadImage as loadCanvasImage,
+  makeCanvas,
+  MAX_CANVAS_PIXELS,
+  revokeUrl,
+  safeDownloadName,
+  smartImageQuality,
+} from '../../lib/imageProcessing';
 
 interface ImageInfo {
   file: File;
@@ -30,26 +41,35 @@ export default function ImageResize() {
   const [outputSize, setOutputSize] = useState('');
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
-  const downloadRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => () => {
+    revokeUrl(image?.url);
+    revokeUrl(outputUrl);
+  }, [image?.url, outputUrl]);
 
   const loadImage = useCallback((files: File[]) => {
     const file = files[0];
     setError('');
     setOutputUrl('');
+    setOutputSize('');
+
     const url = URL.createObjectURL(file);
     const img = new window.Image();
     img.onload = () => {
       setImage({ file, url, width: img.naturalWidth, height: img.naturalHeight });
       setWidth(String(img.naturalWidth));
       setHeight(String(img.naturalHeight));
+      setQuality(smartImageQuality(file, img.naturalWidth, img.naturalHeight, 'document'));
     };
-    img.onerror = () => setError('Could not load image. Please try another file.');
+    img.onerror = () => {
+      revokeUrl(url);
+      setError('Could not load image. Please try another file.');
+    };
     img.src = url;
   }, []);
 
   const applyPreset = (w: number, h: number) => {
     if (h === 0 && image) {
-      // Width-only preset
       const ratio = image.height / image.width;
       setWidth(String(w));
       setHeight(String(Math.round(w * ratio)));
@@ -88,48 +108,47 @@ export default function ImageResize() {
         setProcessing(false);
         return;
       }
+      if (w * h > MAX_CANVAS_PIXELS) {
+        setError('These dimensions are too large for safe mobile processing. Please try a smaller size.');
+        setProcessing(false);
+        return;
+      }
 
-      const canvas = document.createElement('canvas');
-      canvas.width = w;
-      canvas.height = h;
-      const ctx = canvas.getContext('2d')!;
-      const img = new window.Image();
-      img.src = image.url;
-      await new Promise((res) => (img.onload = res));
-      ctx.drawImage(img, 0, 0, w, h);
+      const canvas = makeCanvas(w, h);
+      const ctx = getCanvasContext(canvas);
+      const img = await loadCanvasImage(image.url);
 
       const mime = format === 'jpeg' ? 'image/jpeg' : format === 'png' ? 'image/png' : 'image/webp';
-      const q = format === 'png' ? undefined : quality / 100;
+      if (mime === 'image/jpeg') {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, w, h);
+      }
+      ctx.drawImage(img, 0, 0, w, h);
 
-      canvas.toBlob(
-        (blob) => {
-          if (!blob) { setError('Could not generate output.'); setProcessing(false); return; }
-          const url = URL.createObjectURL(blob);
-          setOutputUrl(url);
-          setOutputSize(blob.size < 1024 * 1024
-            ? `${(blob.size / 1024).toFixed(1)} KB`
-            : `${(blob.size / 1024 / 1024).toFixed(2)} MB`
-          );
-          setProcessing(false);
-        },
-        mime,
-        q
+      const blob = await canvasToBlob(canvas, mime, format === 'png' ? undefined : quality / 100);
+      const url = URL.createObjectURL(blob);
+      revokeUrl(outputUrl);
+      setOutputUrl(url);
+      setOutputSize(blob.size < 1024 * 1024
+        ? `${(blob.size / 1024).toFixed(1)} KB`
+        : `${(blob.size / 1024 / 1024).toFixed(2)} MB`
       );
     } catch {
       setError('Something went wrong. Please try again.');
+    } finally {
       setProcessing(false);
     }
   };
 
   const download = () => {
-    if (!outputUrl) return;
-    const a = downloadRef.current!;
-    a.href = outputUrl;
-    a.download = `resized-${image?.file.name?.replace(/\.[^.]+$/, '') || 'image'}.${format === 'jpeg' ? 'jpg' : format}`;
-    a.click();
+    if (!outputUrl || !image) return;
+    const baseName = safeDownloadName(image.file.name, 'image');
+    downloadUrl(outputUrl, `resized-${baseName}.${format === 'jpeg' ? 'jpg' : format}`);
   };
 
   const reset = () => {
+    revokeUrl(image?.url);
+    revokeUrl(outputUrl);
     setImage(null);
     setOutputUrl('');
     setError('');
@@ -142,7 +161,6 @@ export default function ImageResize() {
 
   return (
     <div className="space-y-6">
-      {/* Upload area */}
       {!image && (
         <div className="card p-6">
           <UploadDropzone
@@ -156,10 +174,8 @@ export default function ImageResize() {
         </div>
       )}
 
-      {/* Main tool */}
       {image && (
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Controls */}
           <div className="card p-6 space-y-5">
             <div>
               <div className="flex items-center justify-between mb-2">
@@ -175,7 +191,6 @@ export default function ImageResize() {
               </div>
             </div>
 
-            {/* Presets */}
             <div>
               <label className="label">Quick Presets</label>
               <div className="flex flex-wrap gap-2">
@@ -191,7 +206,6 @@ export default function ImageResize() {
               </div>
             </div>
 
-            {/* Width / Height */}
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="label mb-0">Dimensions (px)</label>
@@ -232,7 +246,6 @@ export default function ImageResize() {
               </div>
             </div>
 
-            {/* Format */}
             <div>
               <label className="label">Output Format</label>
               <div className="grid grid-cols-3 gap-2">
@@ -251,7 +264,6 @@ export default function ImageResize() {
               </div>
             </div>
 
-            {/* Quality */}
             {format !== 'png' && (
               <div>
                 <div className="flex items-center justify-between mb-2">
@@ -282,9 +294,7 @@ export default function ImageResize() {
             </button>
           </div>
 
-          {/* Preview */}
           <div className="space-y-4">
-            {/* Original preview */}
             <div className="card p-4">
               <p className="text-xs font-medium text-secondary mb-3 uppercase tracking-wide">Original</p>
               <img
@@ -294,7 +304,6 @@ export default function ImageResize() {
               />
             </div>
 
-            {/* Resized preview */}
             {outputUrl && (
               <div className="card p-4">
                 <p className="text-xs font-medium text-secondary mb-3 uppercase tracking-wide">Resized</p>
@@ -315,8 +324,6 @@ export default function ImageResize() {
           </div>
         </div>
       )}
-
-      <a ref={downloadRef} className="sr-only" aria-hidden="true">download</a>
     </div>
   );
 }

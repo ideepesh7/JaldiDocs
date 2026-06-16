@@ -1,8 +1,8 @@
-// src/components/tools/MergePdf.tsx
 import { useState } from 'react';
 import { Combine, ArrowUp, ArrowDown, X, Download, AlertCircle } from 'lucide-react';
 import { PDFDocument } from 'pdf-lib';
 import UploadDropzone from '../ui/UploadDropzone';
+import { downloadBlob, loadPdfSafely, naturalFileSort, savePdfSafely, yieldToBrowser } from '../../lib/pdfProcessing';
 
 interface PdfFile {
   id: string;
@@ -18,15 +18,25 @@ export default function MergePdf() {
   const [success, setSuccess] = useState('');
 
   const addPdfs = (files: File[]) => {
-    const newPdfs = files.map((file) => ({
+    setError('');
+    setSuccess('');
+
+    const existing = new Set(pdfs.map((pdf) => `${pdf.name}-${pdf.size}`));
+    const incoming = naturalFileSort(files).filter((file) => !existing.has(`${file.name}-${file.size}`));
+
+    if (incoming.length === 0) {
+      setError('These PDFs are already added.');
+      return;
+    }
+
+    const newPdfs = incoming.map((file) => ({
       id: crypto.randomUUID(),
       file,
       name: file.name,
       size: file.size,
     }));
+
     setPdfs((prev) => [...prev, ...newPdfs]);
-    setError('');
-    setSuccess('');
   };
 
   const remove = (id: string) => setPdfs((prev) => prev.filter((p) => p.id !== id));
@@ -49,33 +59,36 @@ export default function MergePdf() {
     setSuccess('');
 
     try {
-      const merged = await PDFDocument.create();
+      const merged = await PDFDocument.create({ updateMetadata: false });
+      merged.setTitle('Merged PDF');
+      merged.setCreator('JaldiDocs');
+      merged.setProducer('JaldiDocs');
+      merged.setCreationDate(new Date());
+      merged.setModificationDate(new Date());
 
       for (const pdfFile of pdfs) {
         try {
-          const bytes = await pdfFile.file.arrayBuffer();
-          const doc = await PDFDocument.load(bytes, { ignoreEncryption: false });
+          const { doc } = await loadPdfSafely(pdfFile.file);
           const pages = await merged.copyPages(doc, doc.getPageIndices());
           pages.forEach((p) => merged.addPage(p));
+          await yieldToBrowser();
         } catch (e: any) {
-          if (e?.message?.includes('encrypted')) {
+          if (e?.message === 'encrypted-pdf') {
             setError(`"${pdfFile.name}" is password-protected and cannot be merged. Please remove the password first.`);
             setProcessing(false);
             return;
           }
-          throw e;
+          setError(`"${pdfFile.name}" could not be read. It may be corrupted or unsupported.`);
+          setProcessing(false);
+          return;
         }
       }
 
-      const bytes = await merged.save();
+      const bytes = await savePdfSafely(merged);
       const blob = new Blob([bytes], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'merged-document.pdf';
-      a.click();
+      downloadBlob(blob, 'merged-document.pdf');
       setSuccess(`${pdfs.length} PDFs merged successfully. Download started.`);
-    } catch (e) {
+    } catch {
       setError('Could not merge PDFs. One or more files may be corrupted or unsupported.');
     } finally {
       setProcessing(false);

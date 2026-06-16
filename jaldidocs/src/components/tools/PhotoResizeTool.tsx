@@ -1,8 +1,21 @@
 // src/components/tools/PhotoResizeTool.tsx
 // Reusable component used for Aadhaar Photo Resize, PAN Card Photo Resize, and similar tools.
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { CreditCard, Download, RotateCcw, Lock, Unlock, AlertTriangle } from 'lucide-react';
 import UploadDropzone from '../ui/UploadDropzone';
+import {
+  canvasToBlob,
+  compressCanvasToTarget,
+  coverRect,
+  drawRect,
+  downloadUrl,
+  getCanvasContext,
+  loadImage as loadCanvasImage,
+  makeCanvas,
+  MAX_CANVAS_PIXELS,
+  revokeUrl,
+  smartImageQuality,
+} from '../../lib/imageProcessing';
 
 interface Preset { label: string; w: number; h: number; note?: string }
 
@@ -34,19 +47,29 @@ export default function PhotoResizeTool({
   const [outputSize, setOutputSize] = useState(0);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
-  const downloadRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => () => {
+    revokeUrl(image?.url);
+    revokeUrl(outputUrl);
+  }, [image?.url, outputUrl]);
 
   const loadImage = useCallback((files: File[]) => {
     const file = files[0];
-    setError(''); setOutputUrl('');
+    setError('');
+    setOutputUrl('');
+    setOutputSize(0);
     const url = URL.createObjectURL(file);
     const img = new window.Image();
     img.onload = () => {
       setImage({ file, url, width: img.naturalWidth, height: img.naturalHeight });
       setWidth(String(img.naturalWidth));
       setHeight(String(img.naturalHeight));
+      setQuality(smartImageQuality(file, img.naturalWidth, img.naturalHeight, 'document'));
     };
-    img.onerror = () => setError('Could not load image.');
+    img.onerror = () => {
+      revokeUrl(url);
+      setError('Could not load image.');
+    };
     img.src = url;
   }, []);
 
@@ -63,59 +86,63 @@ export default function PhotoResizeTool({
 
   const process = async () => {
     if (!image) return;
-    setProcessing(true); setError('');
+    setProcessing(true);
+    setError('');
+
     try {
       const w = parseInt(width), h = parseInt(height);
-      if (!w || !h || w < 1 || h < 1) { setError('Enter valid dimensions.'); setProcessing(false); return; }
-
-      const img = new window.Image();
-      img.src = image.url;
-      await new Promise((res) => (img.onload = res));
-
-      const canvas = document.createElement('canvas');
-      canvas.width = w; canvas.height = h;
-      const ctx = canvas.getContext('2d')!;
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillRect(0, 0, w, h);
-      ctx.drawImage(img, 0, 0, w, h);
-
-      const mime = format === 'jpeg' ? 'image/jpeg' : 'image/png';
-
-      const compressQ = (q: number): Promise<Blob> =>
-        new Promise((res, rej) => canvas.toBlob((b) => b ? res(b) : rej(new Error('fail')), mime, q));
-
-      let blob: Blob;
-      if (targetKB && Number(targetKB) > 0 && format === 'jpeg') {
-        const tBytes = Number(targetKB) * 1024;
-        let lo = 0.05, hi = 0.99, best: Blob | null = null;
-        for (let i = 0; i < 12; i++) {
-          const mid = (lo + hi) / 2;
-          const b = await compressQ(mid);
-          if (b.size <= tBytes) { best = b; lo = mid; } else hi = mid;
-        }
-        blob = best || await compressQ(0.5);
-      } else {
-        blob = await compressQ(quality / 100);
+      if (!w || !h || w < 1 || h < 1) {
+        setError('Enter valid dimensions.');
+        setProcessing(false);
+        return;
+      }
+      if (w * h > MAX_CANVAS_PIXELS) {
+        setError('These dimensions are too large for safe mobile processing. Please try a smaller size.');
+        setProcessing(false);
+        return;
       }
 
-      setOutputUrl(URL.createObjectURL(blob));
+      const img = await loadCanvasImage(image.url);
+      const canvas = makeCanvas(w, h);
+      const ctx = getCanvasContext(canvas);
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, w, h);
+      drawRect(ctx, img, coverRect(img.naturalWidth, img.naturalHeight, w, h, true));
+
+      const mime = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+      let blob: Blob;
+
+      if (targetKB && Number(targetKB) > 0 && format === 'jpeg') {
+        blob = await compressCanvasToTarget(canvas, mime, Number(targetKB) * 1024, {
+          minQuality: 0.18,
+          maxQuality: 0.96,
+          allowDownscale: false,
+        });
+      } else {
+        blob = await canvasToBlob(canvas, mime, format === 'png' ? undefined : quality / 100);
+      }
+
+      const url = URL.createObjectURL(blob);
+      revokeUrl(outputUrl);
+      setOutputUrl(url);
       setOutputSize(blob.size);
-    } catch { setError('Processing failed.'); }
-    finally { setProcessing(false); }
+    } catch {
+      setError('Processing failed.');
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const download = () => {
     if (!outputUrl) return;
-    downloadRef.current!.href = outputUrl;
-    downloadRef.current!.download = `photo.${format === 'jpeg' ? 'jpg' : 'png'}`;
-    downloadRef.current!.click();
+    downloadUrl(outputUrl, `photo.${format === 'jpeg' ? 'jpg' : 'png'}`);
   };
 
   const fmtSize = (b: number) => b < 1024 * 1024 ? `${(b / 1024).toFixed(1)} KB` : `${(b / 1024 / 1024).toFixed(2)} MB`;
 
   return (
     <div className="space-y-6">
-      {/* Disclaimer */}
       <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3.5 text-sm text-amber-800">
         <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
         <p>{disclaimer}</p>
@@ -140,7 +167,7 @@ export default function PhotoResizeTool({
             <div>
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-sm font-semibold text-primary">Photo</h3>
-                <button onClick={() => { setImage(null); setOutputUrl(''); }} className="btn-ghost text-xs gap-1.5">
+                <button onClick={() => { revokeUrl(image.url); revokeUrl(outputUrl); setImage(null); setOutputUrl(''); }} className="btn-ghost text-xs gap-1.5">
                   <RotateCcw className="w-3.5 h-3.5" /> Change
                 </button>
               </div>
@@ -148,7 +175,6 @@ export default function PhotoResizeTool({
               <p className="text-xs text-secondary mt-1.5">{image.width}×{image.height}px · {fmtSize(image.file.size)}</p>
             </div>
 
-            {/* Presets */}
             <div>
               <label className="label">Common Sizes</label>
               <div className="grid grid-cols-2 gap-2">
@@ -166,7 +192,6 @@ export default function PhotoResizeTool({
               </div>
             </div>
 
-            {/* Dimensions */}
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="label mb-0">Custom Dimensions (px)</label>
@@ -190,7 +215,6 @@ export default function PhotoResizeTool({
               </div>
             </div>
 
-            {/* Target KB */}
             <div>
               <label className="label text-xs" htmlFor="target-kb">Target Size (KB) — optional</label>
               <input id="target-kb" type="number" value={targetKB} onChange={(e) => setTargetKB(e.target.value)} placeholder="e.g. 100" className="input-field text-sm" min="10" />
@@ -255,7 +279,6 @@ export default function PhotoResizeTool({
           </div>
         </div>
       )}
-      <a ref={downloadRef} className="sr-only" aria-hidden="true">dl</a>
     </div>
   );
 }

@@ -1,7 +1,19 @@
 // src/components/tools/ImageCompress.tsx
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Minimize2, Download, RotateCcw, TrendingDown } from 'lucide-react';
 import UploadDropzone from '../ui/UploadDropzone';
+import {
+  canvasToBlob,
+  compressCanvasToTarget,
+  downloadUrl,
+  getCanvasContext,
+  loadImage as loadCanvasImage,
+  makeCanvas,
+  revokeUrl,
+  safeCanvasSize,
+  safeDownloadName,
+  smartImageQuality,
+} from '../../lib/imageProcessing';
 
 interface ImageInfo {
   file: File;
@@ -26,36 +38,33 @@ export default function ImageCompress() {
   const [outputSize, setOutputSize] = useState(0);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
-  const downloadRef = useRef<HTMLAnchorElement>(null);
 
   const fmtSize = (bytes: number) =>
     bytes < 1024 * 1024 ? `${(bytes / 1024).toFixed(1)} KB` : `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+
+  useEffect(() => () => {
+    revokeUrl(image?.url);
+    revokeUrl(outputUrl);
+  }, [image?.url, outputUrl]);
 
   const loadImage = useCallback((files: File[]) => {
     const file = files[0];
     setError('');
     setOutputUrl('');
+    setOutputSize(0);
+
     const url = URL.createObjectURL(file);
     const img = new window.Image();
     img.onload = () => {
+      setQuality(smartImageQuality(file, img.naturalWidth, img.naturalHeight, 'share'));
       setImage({ file, url, width: img.naturalWidth, height: img.naturalHeight });
     };
-    img.onerror = () => setError('Could not load image.');
+    img.onerror = () => {
+      revokeUrl(url);
+      setError('Could not load image.');
+    };
     img.src = url;
   }, []);
-
-  const compressWithQuality = (
-    canvas: HTMLCanvasElement,
-    mime: string,
-    q: number
-  ): Promise<Blob> =>
-    new Promise((res, rej) => {
-      canvas.toBlob(
-        (blob) => (blob ? res(blob) : rej(new Error('Failed to compress'))),
-        mime,
-        q
-      );
-    });
 
   const compress = async () => {
     if (!image) return;
@@ -64,57 +73,34 @@ export default function ImageCompress() {
 
     try {
       const mime = format === 'jpeg' ? 'image/jpeg' : format === 'png' ? 'image/png' : 'image/webp';
-      const img = new window.Image();
-      img.src = image.url;
-      await new Promise((res) => (img.onload = res));
+      const img = await loadCanvasImage(image.url);
+      const safeSize = safeCanvasSize(img.naturalWidth, img.naturalHeight);
+      const canvas = makeCanvas(safeSize.width, safeSize.height);
+      const ctx = getCanvasContext(canvas);
 
-      const canvas = document.createElement('canvas');
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
-      const ctx = canvas.getContext('2d')!;
-      ctx.drawImage(img, 0, 0);
+      if (mime === 'image/jpeg') {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
       let blob: Blob;
 
       if (targetKB && Number(targetKB) > 0) {
-        const targetBytes = Number(targetKB) * 1024;
-        let lo = 0.05, hi = 0.99, best: Blob | null = null;
-
-        // Binary search for best quality
-        for (let i = 0; i < 14; i++) {
-          const mid = (lo + hi) / 2;
-          const b = await compressWithQuality(canvas, mime, mid);
-          if (b.size <= targetBytes) {
-            best = b;
-            lo = mid;
-          } else {
-            hi = mid;
-          }
-        }
-
-        if (!best) {
-          // Even worst quality exceeds target — scale down
-          let scale = 0.9;
-          while (scale > 0.1) {
-            const c2 = document.createElement('canvas');
-            c2.width = Math.max(1, Math.floor(img.naturalWidth * scale));
-            c2.height = Math.max(1, Math.floor(img.naturalHeight * scale));
-            c2.getContext('2d')!.drawImage(img, 0, 0, c2.width, c2.height);
-            const b = await compressWithQuality(c2, mime, 0.5);
-            if (b.size <= targetBytes) { best = b; break; }
-            scale -= 0.1;
-          }
-        }
-
-        blob = best || await compressWithQuality(canvas, mime, 0.5);
+        blob = await compressCanvasToTarget(canvas, mime, Number(targetKB) * 1024, {
+          minQuality: 0.12,
+          maxQuality: 0.96,
+          allowDownscale: true,
+        });
       } else {
-        blob = await compressWithQuality(canvas, mime, quality / 100);
+        blob = await canvasToBlob(canvas, mime, quality / 100);
       }
 
       const url = URL.createObjectURL(blob);
+      revokeUrl(outputUrl);
       setOutputUrl(url);
       setOutputSize(blob.size);
-    } catch (e) {
+    } catch {
       setError('Compression failed. Please try another image.');
     } finally {
       setProcessing(false);
@@ -123,13 +109,13 @@ export default function ImageCompress() {
 
   const download = () => {
     if (!outputUrl || !image) return;
-    const a = downloadRef.current!;
-    a.href = outputUrl;
-    a.download = `compressed-${image.file.name.replace(/\.[^.]+$/, '')}.${format === 'jpeg' ? 'jpg' : format}`;
-    a.click();
+    const baseName = safeDownloadName(image.file.name, 'image');
+    downloadUrl(outputUrl, `compressed-${baseName}.${format === 'jpeg' ? 'jpg' : format}`);
   };
 
   const reset = () => {
+    revokeUrl(image?.url);
+    revokeUrl(outputUrl);
     setImage(null);
     setOutputUrl('');
     setOutputSize(0);
@@ -137,7 +123,7 @@ export default function ImageCompress() {
   };
 
   const savings = image && outputSize
-    ? Math.round(((image.file.size - outputSize) / image.file.size) * 100)
+    ? Math.max(0, Math.round(((image.file.size - outputSize) / image.file.size) * 100))
     : 0;
 
   return (
@@ -157,7 +143,6 @@ export default function ImageCompress() {
 
       {image && (
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Controls */}
           <div className="card p-6 space-y-5">
             <div>
               <div className="flex items-center justify-between mb-2">
@@ -173,7 +158,6 @@ export default function ImageCompress() {
               </div>
             </div>
 
-            {/* Target size presets */}
             <div>
               <label className="label">Quick Size Target</label>
               <div className="grid grid-cols-2 gap-2">
@@ -206,7 +190,6 @@ export default function ImageCompress() {
               </div>
             </div>
 
-            {/* Quality slider (shown when no target size) */}
             {!targetKB && (
               <div>
                 <div className="flex items-center justify-between mb-2">
@@ -222,7 +205,6 @@ export default function ImageCompress() {
               </div>
             )}
 
-            {/* Format */}
             <div>
               <label className="label">Output Format</label>
               <div className="grid grid-cols-3 gap-2">
@@ -256,7 +238,6 @@ export default function ImageCompress() {
             </button>
           </div>
 
-          {/* Preview */}
           <div className="space-y-4">
             <div className="card p-4">
               <p className="text-xs font-medium text-secondary mb-3 uppercase tracking-wide">Preview</p>
@@ -296,8 +277,6 @@ export default function ImageCompress() {
           </div>
         </div>
       )}
-
-      <a ref={downloadRef} className="sr-only" aria-hidden="true">download</a>
     </div>
   );
 }

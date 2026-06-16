@@ -1,7 +1,18 @@
-// src/components/tools/SignatureResize.tsx
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Pen, Download, RotateCcw } from 'lucide-react';
 import UploadDropzone from '../ui/UploadDropzone';
+import {
+  canvasToBlob,
+  compressCanvasToTarget,
+  containRect,
+  downloadUrl,
+  drawRect,
+  getCanvasContext,
+  loadImage as loadCanvasImage,
+  makeCanvas,
+  MAX_CANVAS_PIXELS,
+  revokeUrl,
+} from '../../lib/imageProcessing';
 
 interface ImageInfo { file: File; url: string; width: number; height: number }
 
@@ -30,16 +41,24 @@ export default function SignatureResize() {
   const [outputSize, setOutputSize] = useState(0);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
-  const downloadRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => () => {
+    revokeUrl(image?.url);
+    revokeUrl(outputUrl);
+  }, [image?.url, outputUrl]);
 
   const loadImage = useCallback((files: File[]) => {
     const file = files[0];
     setError('');
     setOutputUrl('');
+    setOutputSize(0);
     const url = URL.createObjectURL(file);
     const img = new window.Image();
     img.onload = () => setImage({ file, url, width: img.naturalWidth, height: img.naturalHeight });
-    img.onerror = () => setError('Could not load image.');
+    img.onerror = () => {
+      revokeUrl(url);
+      setError('Could not load image.');
+    };
     img.src = url;
   }, []);
 
@@ -51,56 +70,40 @@ export default function SignatureResize() {
     try {
       const w = parseInt(width);
       const h = parseInt(height);
-      if (!w || !h || w < 1 || h < 1) { setError('Enter valid dimensions.'); setProcessing(false); return; }
+      if (!w || !h || w < 1 || h < 1) {
+        setError('Enter valid dimensions.');
+        setProcessing(false);
+        return;
+      }
+      if (w * h > MAX_CANVAS_PIXELS) {
+        setError('These dimensions are too large for safe mobile processing. Please try a smaller size.');
+        setProcessing(false);
+        return;
+      }
 
-      const img = new window.Image();
-      img.src = image.url;
-      await new Promise((res) => (img.onload = res));
+      const img = await loadCanvasImage(image.url);
+      const canvas = makeCanvas(w, h);
+      const ctx = getCanvasContext(canvas);
 
-      const canvas = document.createElement('canvas');
-      canvas.width = w;
-      canvas.height = h;
-      const ctx = canvas.getContext('2d')!;
-
-      if (format === 'png') {
-        // Keep transparency — don't fill background
-      } else {
+      if (format === 'jpeg') {
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(0, 0, w, h);
       }
 
-      // Draw signature maintaining aspect ratio, fitting inside bounds
-      const imgAspect = img.naturalWidth / img.naturalHeight;
-      const canvasAspect = w / h;
-      let drawW, drawH, drawX, drawY;
-      if (imgAspect > canvasAspect) {
-        drawW = w; drawH = w / imgAspect; drawX = 0; drawY = (h - drawH) / 2;
-      } else {
-        drawH = h; drawW = h * imgAspect; drawX = (w - drawW) / 2; drawY = 0;
-      }
-      ctx.drawImage(img, drawX, drawY, drawW, drawH);
+      drawRect(ctx, img, containRect(img.naturalWidth, img.naturalHeight, w, h));
 
       const mime = format === 'jpeg' ? 'image/jpeg' : 'image/png';
-      const targetBytes = targetKB * 1024;
+      const blob = format === 'jpeg'
+        ? await compressCanvasToTarget(canvas, mime, targetKB * 1024, {
+            minQuality: 0.16,
+            maxQuality: 0.96,
+            allowDownscale: false,
+          })
+        : await canvasToBlob(canvas, mime);
 
-      // Binary-search quality to meet target
-      const compressWithQ = (q: number): Promise<Blob> =>
-        new Promise((res, rej) => canvas.toBlob((b) => b ? res(b) : rej(new Error('fail')), mime, q));
-
-      let blob: Blob;
-      if (format === 'png') {
-        blob = await compressWithQ(1); // PNG is lossless — no quality param effect
-      } else {
-        let lo = 0.05, hi = 0.99, best: Blob | null = null;
-        for (let i = 0; i < 12; i++) {
-          const mid = (lo + hi) / 2;
-          const b = await compressWithQ(mid);
-          if (b.size <= targetBytes) { best = b; lo = mid; } else { hi = mid; }
-        }
-        blob = best || await compressWithQ(0.4);
-      }
-
-      setOutputUrl(URL.createObjectURL(blob));
+      const url = URL.createObjectURL(blob);
+      revokeUrl(outputUrl);
+      setOutputUrl(url);
       setOutputSize(blob.size);
     } catch {
       setError('Processing failed. Please try again.');
@@ -111,10 +114,7 @@ export default function SignatureResize() {
 
   const download = () => {
     if (!outputUrl) return;
-    const a = downloadRef.current!;
-    a.href = outputUrl;
-    a.download = `signature.${format === 'jpeg' ? 'jpg' : 'png'}`;
-    a.click();
+    downloadUrl(outputUrl, `signature.${format === 'jpeg' ? 'jpg' : 'png'}`);
   };
 
   const fmtSize = (b: number) => b < 1024 ? `${b} B` : b < 1024 * 1024 ? `${(b / 1024).toFixed(1)} KB` : `${(b / 1024 / 1024).toFixed(2)} MB`;
@@ -136,12 +136,11 @@ export default function SignatureResize() {
 
       {image && (
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Controls */}
           <div className="card p-6 space-y-5">
             <div>
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-sm font-semibold text-primary">Uploaded Signature</h3>
-                <button onClick={() => { setImage(null); setOutputUrl(''); }} className="btn-ghost text-xs gap-1.5">
+                <button onClick={() => { revokeUrl(image.url); revokeUrl(outputUrl); setImage(null); setOutputUrl(''); }} className="btn-ghost text-xs gap-1.5">
                   <RotateCcw className="w-3.5 h-3.5" /> Change
                 </button>
               </div>
@@ -153,7 +152,6 @@ export default function SignatureResize() {
               </p>
             </div>
 
-            {/* Presets */}
             <div>
               <label className="label">Standard Form Sizes</label>
               <div className="grid grid-cols-2 gap-2">
@@ -173,7 +171,6 @@ export default function SignatureResize() {
               </div>
             </div>
 
-            {/* Custom dimensions */}
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="label text-xs" htmlFor="sig-width">Width (px)</label>
@@ -185,7 +182,6 @@ export default function SignatureResize() {
               </div>
             </div>
 
-            {/* Target size */}
             <div>
               <label className="label">Compress To</label>
               <div className="grid grid-cols-3 gap-2">
@@ -205,7 +201,6 @@ export default function SignatureResize() {
               </div>
             </div>
 
-            {/* Format */}
             <div>
               <label className="label">Output Format</label>
               <div className="grid grid-cols-2 gap-2">
@@ -230,7 +225,6 @@ export default function SignatureResize() {
             </button>
           </div>
 
-          {/* Preview + Download */}
           <div className="space-y-4">
             {outputUrl ? (
               <div className="card p-5 space-y-4">
@@ -265,7 +259,6 @@ export default function SignatureResize() {
           </div>
         </div>
       )}
-      <a ref={downloadRef} className="sr-only" aria-hidden="true">download</a>
     </div>
   );
 }

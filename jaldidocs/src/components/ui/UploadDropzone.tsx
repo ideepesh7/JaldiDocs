@@ -36,7 +36,7 @@ export default function UploadDropzone({
       const ext = '.' + file.name.split('.').pop()?.toLowerCase();
       const mime = file.type.toLowerCase();
       const isValid = acceptedTypes.some(
-        (a) => a === ext || a === mime || (a.endsWith('/*') && mime.startsWith(a.slice(0, -1)))
+        (a) => a === ext || (mime && a === mime) || (a.endsWith('/*') && mime.startsWith(a.slice(0, -1)))
       );
 
       if (!isValid) {
@@ -51,6 +51,7 @@ export default function UploadDropzone({
     }
 
     if (validFiles.length > 0) onFiles(validFiles);
+    if (inputRef.current) inputRef.current.value = '';
   };
 
   const onDrop = (e: React.DragEvent) => {

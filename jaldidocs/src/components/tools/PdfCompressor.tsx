@@ -1,8 +1,7 @@
-// src/components/tools/PdfCompressor.tsx
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { FileDown, Download, RotateCcw, AlertCircle, Info } from 'lucide-react';
-import { PDFDocument } from 'pdf-lib';
 import UploadDropzone from '../ui/UploadDropzone';
+import { downloadBlob, loadPdfSafely, savePdfSafely } from '../../lib/pdfProcessing';
 
 interface PdfInfo {
   file: File;
@@ -13,7 +12,7 @@ export default function PdfCompressor() {
   const [pdf, setPdf] = useState<PdfInfo | null>(null);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
-  const [result, setResult] = useState<{ url: string; size: number; savings: number } | null>(null);
+  const [result, setResult] = useState<{ blob: Blob; size: number; savings: number } | null>(null);
 
   const handleFile = (files: File[]) => {
     setPdf({ file: files[0], originalSize: files[0].size });
@@ -31,34 +30,21 @@ export default function PdfCompressor() {
     setResult(null);
 
     try {
-      const bytes = await pdf.file.arrayBuffer();
-      let doc: PDFDocument;
+      const { doc } = await loadPdfSafely(pdf.file);
+      doc.setCreator('JaldiDocs');
+      doc.setProducer('JaldiDocs');
+      doc.setModificationDate(new Date());
 
-      try {
-        doc = await PDFDocument.load(bytes);
-      } catch (e: any) {
-        if (e?.message?.includes('encrypted')) {
-          setError('This PDF is password-protected and cannot be processed. Please remove the password first.');
-          setProcessing(false);
-          return;
-        }
-        throw e;
-      }
-
-      // Basic optimisation: re-save the PDF via pdf-lib which strips some metadata
-      // and normalises the structure. This helps text-heavy PDFs and some vector PDFs.
-      // It does NOT re-compress embedded images — that requires server-side processing.
-      const optimised = await doc.save({
-        useObjectStreams: true,   // more compact cross-reference table
-        addDefaultPage: false,
-      });
-
+      const optimised = await savePdfSafely(doc);
       const blob = new Blob([optimised], { type: 'application/pdf' });
       const savings = Math.round(((pdf.originalSize - blob.size) / pdf.originalSize) * 100);
-      const url = URL.createObjectURL(blob);
-      setResult({ url, size: blob.size, savings });
-    } catch {
-      setError('Could not process this PDF. The file may be corrupted or use an unsupported format.');
+      setResult({ blob, size: blob.size, savings });
+    } catch (e: any) {
+      if (e?.message === 'encrypted-pdf') {
+        setError('This PDF is password-protected and cannot be processed. Please remove the password first.');
+      } else {
+        setError('Could not process this PDF. The file may be corrupted or use an unsupported format.');
+      }
     } finally {
       setProcessing(false);
     }
@@ -66,10 +52,7 @@ export default function PdfCompressor() {
 
   const download = () => {
     if (!result) return;
-    const a = document.createElement('a');
-    a.href = result.url;
-    a.download = `compressed-${pdf?.file.name || 'document.pdf'}`;
-    a.click();
+    downloadBlob(result.blob, `compressed-${pdf?.file.name || 'document.pdf'}`);
   };
 
   const reset = () => {
@@ -80,7 +63,6 @@ export default function PdfCompressor() {
 
   return (
     <div className="space-y-6">
-      {/* Honest browser-limitation notice */}
       <div className="flex items-start gap-3 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3.5 text-sm text-blue-800">
         <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
         <p>
@@ -106,7 +88,6 @@ export default function PdfCompressor() {
 
       {pdf && (
         <div className="card p-6 space-y-5">
-          {/* File info */}
           <div>
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-semibold text-primary">File Details</h3>
@@ -133,7 +114,6 @@ export default function PdfCompressor() {
             </div>
           )}
 
-          {/* Result */}
           {result && (
             <div className="rounded-xl border border-border overflow-hidden">
               <div className="grid grid-cols-3 divide-x divide-border text-center">
