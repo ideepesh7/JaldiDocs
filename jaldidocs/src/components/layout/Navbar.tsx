@@ -7,7 +7,7 @@ const navLinks = [
   { label: 'Image Tools', href: '/#image-tools' },
   { label: 'Business Tools', href: '/#business-tools' },
   { label: 'Student Tools', href: '/#student-tools' },
-  { label: 'Privacy', href: '/privacy' },
+  { label: 'Privacy', href: '/privacy/' },
 ];
 
 export default function Navbar() {
@@ -42,7 +42,7 @@ export default function Navbar() {
 
           {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
-            <a href="/tools/image-resize" className="btn-primary text-sm">
+            <a href="/tools/image-resize/" className="btn-primary text-sm">
               Start Free
             </a>
           </div>
@@ -74,7 +74,7 @@ export default function Navbar() {
               </a>
             ))}
             <div className="pt-3 border-t border-border mt-3">
-              <a href="/tools/image-resize" className="btn-primary w-full justify-center text-sm">
+              <a href="/tools/image-resize/" className="btn-primary w-full justify-center text-sm">
                 Start Free
               </a>
             </div>

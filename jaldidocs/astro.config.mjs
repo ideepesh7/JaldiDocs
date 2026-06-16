@@ -4,6 +4,7 @@ import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   site: 'https://jaldidocs.pages.dev',
+  trailingSlash: 'always',
   integrations: [
     react(),
     tailwind(),

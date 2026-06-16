@@ -20,7 +20,15 @@ const {
 } = Astro.props;
 
 const siteUrl = 'https://jaldidocs.pages.dev';
-const canonicalUrl = canonical ? `${siteUrl}${canonical}` : `${siteUrl}${Astro.url.pathname}`;
+const normalizeCanonicalPath = (path: string) => {
+  if (path === '/') return '/';
+
+  const withLeadingSlash = path.startsWith('/') ? path : `/${path}`;
+  return withLeadingSlash.endsWith('/') ? withLeadingSlash : `${withLeadingSlash}/`;
+};
+
+const canonicalPath = normalizeCanonicalPath(canonical || Astro.url.pathname);
+const canonicalUrl = `${siteUrl}${canonicalPath}`;
 const ogImg = `${siteUrl}/og-image.png`;
 ---
 
@@ -113,34 +121,3 @@ const ogImg = `${siteUrl}/og-image.png`;
     <slot />
   </body>
 </html>
-
-
-
-
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "JaldiDocs",
-  "url": "https://jaldidocs.pages.dev",
-  "description": "Free PDF, Image & Document Tools for India",
-  "logo": "https://jaldidocs.pages.dev/favicon.svg"
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "JaldiDocs",
-  "url": "https://jaldidocs.pages.dev",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://jaldidocs.pages.dev/?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
-}
-</script>
-

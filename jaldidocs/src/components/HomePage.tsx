@@ -57,7 +57,7 @@ export default function HomePage() {
             <a href="#all-tools" className="btn-primary px-6 py-3 text-base">
               Explore Tools <ArrowRight className="w-4 h-4" />
             </a>
-            <a href="/tools/image-resize" className="btn-secondary px-6 py-3 text-base">
+            <a href="/tools/image-resize/" className="btn-secondary px-6 py-3 text-base">
               Resize Image
             </a>
           </div>
@@ -179,7 +179,7 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <a href="/privacy" className="inline-flex items-center gap-2 mt-6 text-sm font-medium text-success hover:underline">
+            <a href="/privacy/" className="inline-flex items-center gap-2 mt-6 text-sm font-medium text-success hover:underline">
               Read our Privacy Policy <ArrowRight className="w-4 h-4" />
             </a>
           </div>
@@ -314,7 +314,7 @@ export default function HomePage() {
           <p className="text-blue-100 mb-6 text-sm md:text-base">
             No signup. No upload. Just open a tool and get your document done in seconds.
           </p>
-          <a href="/tools/image-resize" className="inline-flex items-center gap-2 bg-white text-accent px-6 py-3 rounded-xl font-semibold text-sm hover:bg-blue-50 transition-colors">
+          <a href="/tools/image-resize/" className="inline-flex items-center gap-2 bg-white text-accent px-6 py-3 rounded-xl font-semibold text-sm hover:bg-blue-50 transition-colors">
             Get Started Free <ArrowRight className="w-4 h-4" />
           </a>
         </div>

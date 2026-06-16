@@ -15,7 +15,7 @@ export const TOOLS: Tool[] = [
   {
     id: 'image-resize',
     name: 'Image Resize',
-    slug: '/tools/image-resize',
+    slug: '/tools/image-resize/',
     description: 'Resize any JPG, PNG or WEBP image to exact dimensions. Perfect for exam forms, job applications, and government portals.',
     shortDesc: 'Resize images to exact dimensions',
     category: 'image',
@@ -26,7 +26,7 @@ export const TOOLS: Tool[] = [
   {
     id: 'image-compress',
     name: 'Image Compress',
-    slug: '/tools/image-compress',
+    slug: '/tools/image-compress/',
     description: 'Compress JPG, PNG and WEBP images to reduce file size. Meet upload limits for forms and portals without losing quality.',
     shortDesc: 'Compress images under 50KB, 100KB, 200KB',
     category: 'image',
@@ -37,7 +37,7 @@ export const TOOLS: Tool[] = [
   {
     id: 'passport-photo-maker',
     name: 'Passport Photo Maker',
-    slug: '/tools/passport-photo-maker',
+    slug: '/tools/passport-photo-maker/',
     description: 'Create standard passport and visa photos in 35×45mm, 2×2 inch and other sizes. Generate a printable sheet of multiple photos.',
     shortDesc: 'Create passport photos 35×45mm, 2×2 inch',
     category: 'image',
@@ -48,7 +48,7 @@ export const TOOLS: Tool[] = [
   {
     id: 'invoice-maker',
     name: 'Invoice Maker',
-    slug: '/tools/invoice-maker',
+    slug: '/tools/invoice-maker/',
     description: 'Create professional GST invoices with line items, tax calculation, and download as PDF. Free for freelancers and small businesses.',
     shortDesc: 'Create GST invoices, download as PDF',
     category: 'business',
@@ -59,7 +59,7 @@ export const TOOLS: Tool[] = [
   {
     id: 'jpg-to-pdf',
     name: 'JPG to PDF',
-    slug: '/tools/jpg-to-pdf',
+    slug: '/tools/jpg-to-pdf/',
     description: 'Convert multiple JPG, PNG or WEBP images into a single PDF. Set page size, orientation and margin.',
     shortDesc: 'Convert images to a single PDF',
     category: 'pdf',
@@ -70,7 +70,7 @@ export const TOOLS: Tool[] = [
   {
     id: 'merge-pdf',
     name: 'Merge PDF',
-    slug: '/tools/merge-pdf',
+    slug: '/tools/merge-pdf/',
     description: 'Combine multiple PDF files into one. Upload, reorder and merge PDFs entirely in your browser.',
     shortDesc: 'Combine multiple PDFs into one',
     category: 'pdf',
@@ -81,7 +81,7 @@ export const TOOLS: Tool[] = [
   {
     id: 'pdf-compressor',
     name: 'PDF Compressor',
-    slug: '/tools/pdf-compressor',
+    slug: '/tools/pdf-compressor/',
     description: 'Reduce PDF file size with basic browser-based optimization. Works best on text-heavy PDFs.',
     shortDesc: 'Reduce PDF file size in your browser',
     category: 'pdf',
@@ -92,7 +92,7 @@ export const TOOLS: Tool[] = [
   {
     id: 'signature-resize',
     name: 'Signature Resize',
-    slug: '/tools/signature-resize',
+    slug: '/tools/signature-resize/',
     description: 'Resize your scanned signature to standard sizes (140×60, 160×60, 200×80 px) and compress under 20KB for online forms.',
     shortDesc: 'Resize signature for online forms',
     category: 'student',
@@ -103,7 +103,7 @@ export const TOOLS: Tool[] = [
   {
     id: 'aadhaar-photo-resize',
     name: 'Aadhaar Photo Resize',
-    slug: '/tools/aadhaar-photo-resize',
+    slug: '/tools/aadhaar-photo-resize/',
     description: 'Resize your photo for Aadhaar card update, enrollment and other government portal requirements.',
     shortDesc: 'Resize photo for Aadhaar portals',
     category: 'student',
@@ -113,7 +113,7 @@ export const TOOLS: Tool[] = [
   {
     id: 'pan-card-photo-resize',
     name: 'PAN Card Photo Resize',
-    slug: '/tools/pan-card-photo-resize',
+    slug: '/tools/pan-card-photo-resize/',
     description: 'Resize your photo to the correct size for PAN card applications and income tax portal uploads.',
     shortDesc: 'Resize photo for PAN card applications',
     category: 'student',
@@ -123,7 +123,7 @@ export const TOOLS: Tool[] = [
   {
     id: 'rent-receipt-generator',
     name: 'Rent Receipt Generator',
-    slug: '/tools/rent-receipt-generator',
+    slug: '/tools/rent-receipt-generator/',
     description: 'Generate professional rent receipts with tenant details, rent amount and payment mode. Download as PDF or print.',
     shortDesc: 'Generate rent receipts for HRA claims',
     category: 'business',

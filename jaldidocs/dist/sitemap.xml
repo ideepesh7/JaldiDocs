@@ -21,4 +21,48 @@
     <loc>https://jaldidocs.pages.dev/terms/</loc>
   </url>
 
+  <url>
+    <loc>https://jaldidocs.pages.dev/tools/image-resize/</loc>
+  </url>
+
+  <url>
+    <loc>https://jaldidocs.pages.dev/tools/image-compress/</loc>
+  </url>
+
+  <url>
+    <loc>https://jaldidocs.pages.dev/tools/passport-photo-maker/</loc>
+  </url>
+
+  <url>
+    <loc>https://jaldidocs.pages.dev/tools/invoice-maker/</loc>
+  </url>
+
+  <url>
+    <loc>https://jaldidocs.pages.dev/tools/jpg-to-pdf/</loc>
+  </url>
+
+  <url>
+    <loc>https://jaldidocs.pages.dev/tools/merge-pdf/</loc>
+  </url>
+
+  <url>
+    <loc>https://jaldidocs.pages.dev/tools/pdf-compressor/</loc>
+  </url>
+
+  <url>
+    <loc>https://jaldidocs.pages.dev/tools/signature-resize/</loc>
+  </url>
+
+  <url>
+    <loc>https://jaldidocs.pages.dev/tools/aadhaar-photo-resize/</loc>
+  </url>
+
+  <url>
+    <loc>https://jaldidocs.pages.dev/tools/pan-card-photo-resize/</loc>
+  </url>
+
+  <url>
+    <loc>https://jaldidocs.pages.dev/tools/rent-receipt-generator/</loc>
+  </url>
+
 </urlset>

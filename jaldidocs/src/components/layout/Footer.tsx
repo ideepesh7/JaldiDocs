@@ -3,29 +3,29 @@ import { Zap, Shield, Heart } from 'lucide-react';
 
 const footerLinks = {
   'PDF Tools': [
-    { label: 'JPG to PDF', href: '/tools/jpg-to-pdf' },
-    { label: 'Merge PDF', href: '/tools/merge-pdf' },
-    { label: 'PDF Compressor', href: '/tools/pdf-compressor' },
+    { label: 'JPG to PDF', href: '/tools/jpg-to-pdf/' },
+    { label: 'Merge PDF', href: '/tools/merge-pdf/' },
+    { label: 'PDF Compressor', href: '/tools/pdf-compressor/' },
   ],
   'Image Tools': [
-    { label: 'Image Resize', href: '/tools/image-resize' },
-    { label: 'Image Compress', href: '/tools/image-compress' },
-    { label: 'Passport Photo', href: '/tools/passport-photo-maker' },
-    { label: 'Signature Resize', href: '/tools/signature-resize' },
+    { label: 'Image Resize', href: '/tools/image-resize/' },
+    { label: 'Image Compress', href: '/tools/image-compress/' },
+    { label: 'Passport Photo', href: '/tools/passport-photo-maker/' },
+    { label: 'Signature Resize', href: '/tools/signature-resize/' },
   ],
   'Business Tools': [
-    { label: 'Invoice Maker', href: '/tools/invoice-maker' },
-    { label: 'Rent Receipt', href: '/tools/rent-receipt-generator' },
+    { label: 'Invoice Maker', href: '/tools/invoice-maker/' },
+    { label: 'Rent Receipt', href: '/tools/rent-receipt-generator/' },
   ],
   'Student Tools': [
-    { label: 'Aadhaar Photo Resize', href: '/tools/aadhaar-photo-resize' },
-    { label: 'PAN Card Photo', href: '/tools/pan-card-photo-resize' },
+    { label: 'Aadhaar Photo Resize', href: '/tools/aadhaar-photo-resize/' },
+    { label: 'PAN Card Photo', href: '/tools/pan-card-photo-resize/' },
   ],
   'Company': [
-    { label: 'About', href: '/about' },
-    { label: 'Contact', href: '/contact' },
-    { label: 'Privacy Policy', href: '/privacy' },
-    { label: 'Terms of Use', href: '/terms' },
+    { label: 'About', href: '/about/' },
+    { label: 'Contact', href: '/contact/' },
+    { label: 'Privacy Policy', href: '/privacy/' },
+    { label: 'Terms of Use', href: '/terms/' },
   ],
 };
 
