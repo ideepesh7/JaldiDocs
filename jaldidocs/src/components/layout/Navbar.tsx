@@ -1,6 +1,6 @@
 // src/components/layout/Navbar.tsx
 import { useState } from 'react';
-import { Menu, X, FileText, Zap } from 'lucide-react';
+import { Menu, X, Zap } from 'lucide-react';
 
 const navLinks = [
   { label: 'PDF Tools', href: '/#pdf-tools' },
@@ -15,12 +15,12 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-border shadow-sm">
+    <header className="site-header sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-border shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <a href="/" className="flex items-center gap-2.5 text-primary font-semibold text-lg tracking-tight">
-            <span className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
+            <span className="brand-mark w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
               <Zap className="w-4 h-4 text-white" />
             </span>
             <span>
@@ -34,7 +34,7 @@ export default function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
-                className="btn-ghost text-sm"
+                className="nav-link btn-ghost text-sm"
               >
                 {link.label}
               </a>
@@ -62,7 +62,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden bg-white border-t border-border shadow-lg">
+        <div className="mobile-menu md:hidden bg-white border-t border-border shadow-lg">
           <nav className="px-4 py-4 space-y-1">
             {navLinks.map((link) => (
               <a

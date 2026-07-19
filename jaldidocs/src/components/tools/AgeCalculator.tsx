@@ -59,14 +59,14 @@ export default function AgeCalculator() {
       </div>
 
       {result ? (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="motion-stagger grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
             ['Years', result.years],
             ['Months', result.months],
             ['Days', result.days],
             ['Total days', result.totalDays],
           ].map(([label, value]) => (
-            <div key={label} className="rounded-xl border border-border bg-gray-50 p-4 text-center">
+            <div key={label} className="result-panel rounded-xl border border-border bg-gray-50 p-4 text-center">
               <p className="text-2xl font-semibold text-primary">{value}</p>
               <p className="text-xs text-secondary mt-1">{label}</p>
             </div>

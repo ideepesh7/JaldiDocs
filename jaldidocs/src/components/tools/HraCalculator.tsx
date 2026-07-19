@@ -66,16 +66,16 @@ export default function HraCalculator() {
         </label>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-3">
-        <div className="rounded-xl border border-border bg-emerald-50 p-4">
+      <div className="motion-stagger grid md:grid-cols-3 gap-3">
+        <div className="result-panel rounded-xl border border-border bg-emerald-50 p-4">
           <p className="text-xs text-secondary">Estimated exemption</p>
           <p className="text-2xl font-semibold text-success mt-1">{fmt(result.exemption)}</p>
         </div>
-        <div className="rounded-xl border border-border bg-gray-50 p-4">
+        <div className="result-panel rounded-xl border border-border bg-gray-50 p-4">
           <p className="text-xs text-secondary">Taxable HRA</p>
           <p className="text-2xl font-semibold text-primary mt-1">{fmt(result.taxableHra)}</p>
         </div>
-        <div className="rounded-xl border border-border bg-gray-50 p-4">
+        <div className="result-panel rounded-xl border border-border bg-gray-50 p-4">
           <p className="text-xs text-secondary">Annual rent</p>
           <p className="text-2xl font-semibold text-primary mt-1">{fmt(result.annualRent)}</p>
         </div>

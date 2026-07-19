@@ -36,7 +36,7 @@ export default function ToolCard({ tool }: { tool: Tool }) {
       aria-label={`Open ${tool.name} tool`}
     >
       <div className="flex items-start justify-between mb-3">
-        <div className="w-11 h-11 rounded-xl bg-accent-soft flex items-center justify-center group-hover:bg-accent transition-colors duration-200">
+        <div className="tool-icon">
           <Icon className="w-5 h-5 text-accent group-hover:text-white transition-colors duration-200" />
         </div>
         <span className={CATEGORY_STYLES[tool.category]}>
@@ -46,7 +46,7 @@ export default function ToolCard({ tool }: { tool: Tool }) {
       <h3 className="text-sm font-semibold text-primary mb-1">{tool.name}</h3>
       <p className="text-xs text-secondary leading-relaxed flex-1">{tool.shortDesc}</p>
       <div className="mt-4 flex items-center gap-1 text-xs font-medium text-accent group-hover:gap-2 transition-all duration-200">
-        Use Tool <ArrowRight className="w-3.5 h-3.5" />
+        Use Tool <ArrowRight className="tool-arrow w-3.5 h-3.5" />
       </div>
     </a>
   );

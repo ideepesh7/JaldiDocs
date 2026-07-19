@@ -1,11 +1,11 @@
 // src/components/HomePage.tsx
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Search, ArrowRight, Shield, Zap, Smartphone, Lock,
-  FileText, Image, Briefcase, GraduationCap, ChevronDown,
+  FileText, Image, Briefcase, GraduationCap,
   Star, CheckCircle2, Users, Clock
 } from 'lucide-react';
-import { TOOLS, CATEGORIES, POPULAR_TOOLS } from '../data/tools';
+import { TOOLS, CATEGORIES } from '../data/tools';
 import { HOME_FAQS } from '../data/faqs';
 import ToolCard from './ui/ToolCard';
 import FAQSection from './ui/FAQSection';
@@ -14,7 +14,6 @@ import AdSlot from './ui/AdSlot';
 export default function HomePage() {
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
-  const [faqOpen, setFaqOpen] = useState<number | null>(null);
 
   const filteredTools = useMemo(() => {
     let tools = activeCategory === 'all' ? TOOLS : TOOLS.filter((t) => t.category === activeCategory);
@@ -32,28 +31,31 @@ export default function HomePage() {
 
   return (
     <main>
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-white via-bg to-bg py-20 md:py-28 px-4">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,#EEF2FF_0%,transparent_60%)]" />
+      <section className="hero-shell relative overflow-hidden bg-gradient-to-b from-white via-bg to-bg py-20 md:py-28 px-4">
+        <div className="hero-ambient" />
+        <span className="floating-tool left-[6%] top-20 hidden md:inline-flex">PDF</span>
+        <span className="floating-tool right-[8%] top-24 hidden md:inline-flex" style={{ animationDelay: '1.1s' }}>Photo 50KB</span>
+        <span className="floating-tool left-[12%] bottom-20 hidden lg:inline-flex" style={{ animationDelay: '2s' }}>Invoice</span>
+        <span className="floating-tool right-[14%] bottom-24 hidden lg:inline-flex" style={{ animationDelay: '3s' }}>HRA</span>
+
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 bg-white border border-border rounded-full px-4 py-1.5 text-xs font-medium text-secondary mb-6 shadow-sm">
+          <div className="motion-pop inline-flex items-center gap-2 bg-white border border-border rounded-full px-4 py-1.5 text-xs font-medium text-secondary mb-6 shadow-sm">
             <Zap className="w-3.5 h-3.5 text-accent" />
-            Free browser-based tools — no upload, no signup
+            Free browser-based tools - no upload, no signup
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-semibold text-primary tracking-tight leading-tight mb-6">
+          <h1 className="motion-reveal motion-delay-1 text-4xl md:text-6xl font-semibold text-primary tracking-tight leading-tight mb-6">
             Free PDF, Image &{' '}
             <span className="font-serif italic text-accent">Document Tools</span>
             {' '}for India
           </h1>
 
-          <p className="text-lg md:text-xl text-secondary leading-relaxed max-w-2xl mx-auto mb-8">
+          <p className="motion-reveal motion-delay-2 text-lg md:text-xl text-secondary leading-relaxed max-w-2xl mx-auto mb-8">
             Compress, resize, convert and create everyday documents directly in your browser.
             No signup. No upload. No cost.
           </p>
 
-          {/* Hero CTAs */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+          <div className="motion-reveal motion-delay-3 flex flex-wrap items-center justify-center gap-3 mb-10">
             <a href="#all-tools" className="btn-primary px-6 py-3 text-base">
               Explore Tools <ArrowRight className="w-4 h-4" />
             </a>
@@ -62,15 +64,14 @@ export default function HomePage() {
             </a>
           </div>
 
-          {/* Trust badges */}
-          <div className="flex flex-wrap items-center justify-center gap-3">
+          <div className="motion-stagger flex flex-wrap items-center justify-center gap-3">
             {[
               { icon: Users, label: 'No Signup Required' },
               { icon: Shield, label: 'Browser-based' },
               { icon: Star, label: 'Free to Use' },
               { icon: Lock, label: 'Privacy-first' },
             ].map(({ icon: Icon, label }) => (
-              <div key={label} className="flex items-center gap-1.5 bg-white border border-border rounded-full px-3.5 py-1.5 text-xs font-medium text-secondary shadow-sm">
+              <div key={label} className="trust-pill flex items-center gap-1.5 bg-white border border-border rounded-full px-3.5 py-1.5 text-xs font-medium text-secondary shadow-sm">
                 <Icon className="w-3.5 h-3.5 text-success" />
                 {label}
               </div>
@@ -79,29 +80,26 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Search + Filter */}
       <section id="all-tools" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-20">
-        <div className="card p-4 md:p-6">
-          {/* Search bar */}
+        <div className="motion-reveal motion-delay-4 card p-4 md:p-6">
           <div className="relative mb-5">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search PDF, image, invoice, passport photo…"
+              placeholder="Search PDF, image, invoice, passport photo..."
               className="input-field pl-10 text-sm"
               aria-label="Search tools"
             />
           </div>
 
-          {/* Category filters */}
           <div className="flex flex-wrap gap-2">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium border transition-all duration-150 ${
+                className={`filter-chip flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium border transition-all duration-150 ${
                   activeCategory === cat.id
                     ? 'bg-accent text-white border-accent shadow-sm'
                     : 'bg-white text-secondary border-border hover:border-accent hover:text-accent'
@@ -118,7 +116,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Tools grid */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         {filteredTools.length === 0 ? (
           <div className="text-center py-16">
@@ -127,12 +124,12 @@ export default function HomePage() {
         ) : (
           <>
             {search === '' && activeCategory === 'all' && (
-              <div className="mb-6">
+              <div className="motion-reveal mb-6">
                 <h2 className="section-title mb-1">Popular Tools</h2>
                 <p className="section-subtitle text-sm">Most used tools by Indian students, freelancers and small businesses.</p>
               </div>
             )}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div className="motion-stagger grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {filteredTools.map((tool) => (
                 <ToolCard key={tool.id} tool={tool} />
               ))}
@@ -141,17 +138,15 @@ export default function HomePage() {
         )}
       </section>
 
-      {/* Ad slot */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
         <AdSlot label="Advertisement" className="max-w-2xl mx-auto" />
       </div>
 
-      {/* Privacy-first section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
-        <div className="bg-gradient-to-br from-emerald-50 to-blue-50 border border-emerald-100 rounded-3xl p-8 md:p-12">
+        <div className="motion-reveal bg-gradient-to-br from-emerald-50 to-blue-50 border border-emerald-100 rounded-3xl p-8 md:p-12">
           <div className="max-w-2xl">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-success flex items-center justify-center">
+              <div className="success-pulse w-10 h-10 rounded-xl bg-success flex items-center justify-center">
                 <Shield className="w-5 h-5 text-white" />
               </div>
               <span className="text-sm font-semibold text-success uppercase tracking-wide">Privacy First</span>
@@ -162,9 +157,9 @@ export default function HomePage() {
             <p className="text-secondary leading-relaxed mb-6">
               Every tool on JaldiDocs processes your files entirely in your browser using modern web APIs.
               Your photos, PDFs, invoices, and documents <strong>never leave your device</strong> and are
-              never uploaded to any server. This is not just a claim — it is how the technology works.
+              never uploaded to any server. This is not just a claim - it is how the technology works.
             </p>
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="motion-stagger grid sm:grid-cols-2 gap-4">
               {[
                 'Files processed locally in your browser',
                 'Zero server uploads in this MVP',
@@ -186,13 +181,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Why JaldiDocs */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
-        <div className="text-center mb-10">
+        <div className="motion-reveal text-center mb-10">
           <h2 className="section-title">Why JaldiDocs?</h2>
           <p className="section-subtitle mx-auto">Built for real Indian document needs. Fast, honest, and free.</p>
         </div>
-        <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-5">
+        <div className="motion-stagger grid sm:grid-cols-2 md:grid-cols-4 gap-5">
           {[
             {
               icon: Zap,
@@ -215,7 +209,7 @@ export default function HomePage() {
               desc: 'Open any tool and start working. No account, no email, no password required.',
             },
           ].map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="card p-5">
+            <div key={title} className="feature-card card p-5">
               <div className="w-10 h-10 rounded-xl bg-accent-soft flex items-center justify-center mb-4">
                 <Icon className="w-5 h-5 text-accent" />
               </div>
@@ -226,13 +220,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Daily use cases in India */}
       <section id="pdf-tools" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
-        <div className="text-center mb-10">
+        <div className="motion-reveal text-center mb-10">
           <h2 className="section-title">Built for Everyday India</h2>
           <p className="section-subtitle mx-auto">Real tools for real tasks that millions of Indians face every day.</p>
         </div>
-        <div className="grid md:grid-cols-2 gap-5">
+        <div className="motion-stagger grid md:grid-cols-2 gap-5">
           {[
             {
               icon: GraduationCap,
@@ -258,7 +251,7 @@ export default function HomePage() {
               icon: FileText,
               title: 'Government Form Users',
               items: [
-                'Resize passport photo to exact 35×45mm',
+                'Resize passport photo to exact 35x45mm',
                 'Compress photo for government portals',
                 'Create PAN card and Aadhaar update photos',
                 'Convert images to PDF for submissions',
@@ -275,7 +268,7 @@ export default function HomePage() {
               ],
             },
           ].map(({ icon: Icon, title, items }) => (
-            <div key={title} className="card p-6" id={title.toLowerCase().includes('freelancer') ? 'business-tools' : title.toLowerCase().includes('student') ? 'student-tools' : title.toLowerCase().includes('image') ? 'image-tools' : ''}>
+            <div key={title} className="feature-card card p-6" id={title.toLowerCase().includes('freelancer') ? 'business-tools' : title.toLowerCase().includes('student') ? 'student-tools' : title.toLowerCase().includes('image') ? 'image-tools' : ''}>
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-9 h-9 rounded-xl bg-accent-soft flex items-center justify-center">
                   <Icon className="w-4.5 h-4.5 text-accent" />
@@ -295,26 +288,23 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Ad slot mid-content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
         <AdSlot label="Advertisement" className="max-w-2xl mx-auto" />
       </div>
 
-      {/* FAQ */}
-      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+      <section className="motion-reveal max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
         <FAQSection faqs={HOME_FAQS} title="Frequently Asked Questions" />
       </section>
 
-      {/* CTA banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 mb-4">
-        <div className="bg-accent rounded-3xl p-8 md:p-12 text-center text-white">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-3 tracking-tight">
+        <div className="motion-reveal cta-panel bg-accent rounded-3xl p-8 md:p-12 text-center text-white">
+          <h2 className="relative text-2xl md:text-3xl font-semibold mb-3 tracking-tight">
             Start using JaldiDocs for free
           </h2>
-          <p className="text-blue-100 mb-6 text-sm md:text-base">
+          <p className="relative text-blue-100 mb-6 text-sm md:text-base">
             No signup. No upload. Just open a tool and get your document done in seconds.
           </p>
-          <a href="/tools/image-resize/" className="inline-flex items-center gap-2 bg-white text-accent px-6 py-3 rounded-xl font-semibold text-sm hover:bg-blue-50 transition-colors">
+          <a href="/tools/image-resize/" className="relative inline-flex items-center gap-2 bg-white text-accent px-6 py-3 rounded-xl font-semibold text-sm hover:bg-blue-50 transition-colors">
             Get Started Free <ArrowRight className="w-4 h-4" />
           </a>
         </div>
