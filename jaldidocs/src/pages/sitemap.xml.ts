@@ -10,6 +10,7 @@ const staticPaths = [
   '/contact/',
   '/privacy/',
   '/terms/',
+  '/disclaimer/',
 ];
 
 const normalizePath = (path: string) => {

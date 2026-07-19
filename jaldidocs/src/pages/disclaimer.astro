@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
+---
+
+<BaseLayout
+  title="Disclaimer | JaldiDocs"
+  description="Important disclaimer for JaldiDocs document, photo, PDF, invoice, and government-form preparation tools."
+  canonical="/disclaimer/"
+>
+  <Navbar client:load />
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <div class="mb-10">
+      <nav class="flex items-center gap-1.5 text-xs text-gray-400 mb-6">
+        <a href="/" class="hover:text-gray-600 transition-colors">Home</a>
+        <span>/</span>
+        <span class="text-gray-700 font-medium">Disclaimer</span>
+      </nav>
+      <h1 class="text-3xl font-semibold text-gray-900 tracking-tight">Disclaimer</h1>
+      <p class="text-gray-500 text-sm mt-2">Last updated: July 2026</p>
+    </div>
+
+    <div class="prose-tool space-y-8">
+      <section>
+        <h2>General information only</h2>
+        <p>
+          JaldiDocs provides browser-based utilities to help users prepare images, PDFs, invoices, rent
+          receipts, and everyday documents. The tools are provided for convenience and general information.
+          They are not a substitute for official instructions, legal advice, tax advice, accounting advice,
+          or professional review.
+        </p>
+      </section>
+
+      <section>
+        <h2>No official government affiliation</h2>
+        <p>
+          JaldiDocs is not affiliated with, endorsed by, or operated by any government department, passport
+          authority, tax authority, bank, examination board, identity authority, or official document portal.
+          References to Aadhaar, PAN, GST, HRA, passport photos, exam forms, and similar workflows are made
+          only to explain common user needs.
+        </p>
+      </section>
+
+      <section>
+        <h2>Always verify current requirements</h2>
+        <p>
+          Document rules can change. Photo dimensions, file size limits, PDF limits, accepted formats, and
+          upload rules may differ between portals and may be updated without notice. Always verify the latest
+          requirement on the official website before submitting a file prepared with JaldiDocs.
+        </p>
+      </section>
+
+      <section>
+        <h2>No guarantee of acceptance</h2>
+        <p>
+          We do not guarantee that a file created, resized, compressed, converted, or generated using
+          JaldiDocs will be accepted by any portal, agency, institution, employer, business, or authority.
+          Acceptance depends on that organization's current validation rules and review process.
+        </p>
+      </section>
+
+      <section>
+        <h2>Invoices, receipts, and business documents</h2>
+        <p>
+          Invoice and rent receipt tools are simple document generators. Users are responsible for checking
+          names, dates, amounts, tax details, local rules, and supporting records. Consult a qualified
+          professional for legal, tax, accounting, or compliance questions.
+        </p>
+      </section>
+
+      <section>
+        <h2>Privacy and local processing</h2>
+        <p>
+          Where a tool states that processing happens in your browser, the file operation is designed to run
+          locally on your device instead of being uploaded to JaldiDocs. Review our
+          <a href="/privacy/" class="text-accent hover:underline">Privacy Policy</a> for details about local
+          processing, analytics, local storage, and contact information.
+        </p>
+      </section>
+
+      <section>
+        <h2>Contact</h2>
+        <p>
+          Questions, corrections, or concerns can be sent to
+          <a href="mailto:supportjaldidocs@gmail.com" class="text-accent hover:underline">supportjaldidocs@gmail.com</a>.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <Footer client:load />
+</BaseLayout>

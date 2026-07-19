@@ -38,7 +38,7 @@ export function safeFilePart(value: string, fallback = 'download') {
 }
 
 export function debounce<T extends (...args: any[]) => void>(fn: T, delay = 500) {
-  let timer: ReturnType<typeof window.setTimeout> | undefined;
+  let timer: number | undefined;
 
   return (...args: Parameters<T>) => {
     if (timer) window.clearTimeout(timer);

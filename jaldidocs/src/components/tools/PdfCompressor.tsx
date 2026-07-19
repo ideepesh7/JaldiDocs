@@ -37,7 +37,8 @@ export default function PdfCompressor() {
       doc.setModificationDate(new Date());
 
       const optimised = await savePdfSafely(doc);
-      const blob = new Blob([optimised], { type: 'application/pdf' });
+      const arrayBuffer = optimised.buffer.slice(optimised.byteOffset, optimised.byteOffset + optimised.byteLength) as ArrayBuffer;
+      const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
       const savings = Math.round(((pdf.originalSize - blob.size) / pdf.originalSize) * 100);
       setResult({ blob, size: blob.size, savings });
     } catch (e: any) {

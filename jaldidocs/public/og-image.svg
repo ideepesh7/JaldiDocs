@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">JaldiDocs social preview</title>
+  <desc id="desc">Free browser-based PDF, image, and document tools for India.</desc>
+  <rect width="1200" height="630" fill="#f8fafc"/>
+  <rect x="64" y="64" width="1072" height="502" rx="32" fill="#ffffff" stroke="#dbe4f0" stroke-width="2"/>
+  <rect x="104" y="104" width="80" height="80" rx="20" fill="#2563eb"/>
+  <path d="M151 116 116 171h33l-12 41 47-61h-34l1-35Z" fill="#fff"/>
+  <text x="216" y="159" fill="#0f172a" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700">Jaldi<tspan fill="#2563eb">Docs</tspan></text>
+  <text x="104" y="292" fill="#0f172a" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="700">Free PDF, Image &amp;</text>
+  <text x="104" y="368" fill="#2563eb" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="700">Document Tools</text>
+  <text x="104" y="448" fill="#475569" font-family="Arial, Helvetica, sans-serif" font-size="30">Private browser-based tools for Indian forms, invoices, photos, and PDFs.</text>
+  <text x="104" y="514" fill="#0f172a" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">No signup. No upload. Free to use.</text>
+</svg>

@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
+---
+
+<BaseLayout
+  title="Page Not Found | JaldiDocs"
+  description="The page you requested could not be found. Explore free JaldiDocs PDF, image, and document tools."
+  canonical="/404/"
+  noindex={true}
+>
+  <Navbar client:load />
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <p class="text-sm font-semibold text-accent mb-3">404</p>
+    <h1 class="text-4xl font-semibold text-primary tracking-tight mb-4">Page not found</h1>
+    <p class="text-secondary leading-relaxed mb-8">
+      This page may have moved, or the address may be incorrect. Return to JaldiDocs and choose a PDF,
+      image, invoice, rent receipt, or photo tool.
+    </p>
+    <a href="/" class="btn-primary inline-flex">Go to homepage</a>
+  </main>
+
+  <Footer client:load />
+</BaseLayout>

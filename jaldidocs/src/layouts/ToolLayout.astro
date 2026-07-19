@@ -30,6 +30,40 @@ const categoryLabel = currentTool
       student: 'Student Tools',
     }[currentTool.category]
   : undefined;
+
+const categoryUseCase = currentTool
+  ? {
+      pdf: 'PDF tools are useful when a portal expects one clean upload, a smaller document, or pages in a specific order.',
+      image: 'Image tools are useful when an application form asks for exact pixel dimensions, a fixed format, or a strict file size.',
+      business: 'Business tools are useful for freelancers, tenants, landlords, and small businesses that need a simple printable record.',
+      student: 'Student tools are useful for exam forms, identity updates, scholarship portals, and job applications that reject files outside strict limits.',
+    }[currentTool.category]
+  : '';
+
+const outputAdvice = currentTool
+  ? {
+      pdf: [
+        'Keep the final PDF name simple, using letters, numbers, and hyphens.',
+        'Open the downloaded PDF once before upload to confirm page order and readability.',
+        'If a portal gives a size limit, compress or split the file before submitting.',
+      ],
+      image: [
+        'Use JPG for photos unless the portal specifically asks for PNG.',
+        'Avoid enlarging tiny images because it can make the result blurry.',
+        'Check the downloaded image dimensions before submitting it to an official form.',
+      ],
+      business: [
+        'Review names, dates, amounts, and tax fields before downloading.',
+        'Keep a copy for your own records after generating the document.',
+        'Use the generated document as a convenience template, not as legal or tax advice.',
+      ],
+      student: [
+        'Read the latest official notification before final submission.',
+        'Match both dimensions and file size, because many portals validate both.',
+        'Keep the original file unchanged so you can make a new version if a portal rejects the first one.',
+      ],
+    }[currentTool.category]
+  : [];
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical}>
@@ -85,6 +119,39 @@ const categoryLabel = currentTool
           ],
         })}
       />
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'HowTo',
+          name: `How to use ${currentTool.name}`,
+          description: `Use ${currentTool.name} in your browser without signup or file uploads.`,
+          totalTime: 'PT2M',
+          supply: [
+            {
+              '@type': 'HowToSupply',
+              name: 'A file or document prepared on your device',
+            },
+          ],
+          step: [
+            {
+              '@type': 'HowToStep',
+              name: 'Open the tool',
+              text: `Open ${currentTool.name} on JaldiDocs and choose the file or details required by the tool.`,
+            },
+            {
+              '@type': 'HowToStep',
+              name: 'Review settings',
+              text: 'Select the output settings that match your form, portal, or personal document requirement.',
+            },
+            {
+              '@type': 'HowToStep',
+              name: 'Download and verify',
+              text: 'Download the result and verify the final file before using it on any official or third-party website.',
+            },
+          ],
+        })}
+      />
     </>
   )}
 
@@ -101,6 +168,38 @@ const categoryLabel = currentTool
 
     <!-- Additional tool content (SEO, FAQs, related tools) -->
     <slot name="seo-content" />
+
+    {currentTool && (
+      <section class="prose-tool mt-12 border-t border-border pt-10">
+        <h2>Practical guidance for {currentTool.name}</h2>
+        <p>
+          {currentTool.description} {categoryUseCase} JaldiDocs is designed for everyday Indian document
+          workflows where a small mismatch in size, format, page order, or file weight can cause an upload
+          to fail.
+        </p>
+
+        <h3>Before you use the tool</h3>
+        <ul>
+          <li>Keep the original file unchanged so you can restart if a form has a different requirement.</li>
+          <li>Check whether the portal asks for pixels, millimetres, page size, file format, or maximum KB/MB.</li>
+          <li>Use a clear file name without special symbols before uploading to government, exam, tax, or business portals.</li>
+        </ul>
+
+        <h3>After downloading</h3>
+        <ul>
+          {outputAdvice.map((item) => <li>{item}</li>)}
+          <li>Open the final file once on your device and confirm it is readable before submitting it anywhere.</li>
+        </ul>
+
+        <h3>Privacy and accuracy note</h3>
+        <p>
+          The tool runs in your browser wherever possible, which means your file is processed on your own
+          device instead of being uploaded to JaldiDocs. Official requirements can still change, so always
+          compare the output with the latest instructions from the website or organization where you plan to
+          submit it.
+        </p>
+      </section>
+    )}
   </div>
 
   <Footer client:load />

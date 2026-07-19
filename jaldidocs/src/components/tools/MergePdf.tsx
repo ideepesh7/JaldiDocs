@@ -85,7 +85,8 @@ export default function MergePdf() {
       }
 
       const bytes = await savePdfSafely(merged);
-      const blob = new Blob([bytes], { type: 'application/pdf' });
+      const arrayBuffer = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
+      const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
       downloadBlob(blob, 'merged-document.pdf');
       setSuccess(`${pdfs.length} PDFs merged successfully. Download started.`);
     } catch {
