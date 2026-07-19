@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import {
   Search, ArrowRight, Shield, Zap, Smartphone, Lock,
   FileText, Image, Briefcase, GraduationCap,
-  Star, CheckCircle2, Users, Clock
+  Star, CheckCircle2, Users, Clock, Upload, Download, Sparkles
 } from 'lucide-react';
 import { TOOLS, CATEGORIES } from '../data/tools';
 import { HOME_FAQS } from '../data/faqs';
@@ -31,7 +31,7 @@ export default function HomePage() {
 
   return (
     <main>
-      <section className="hero-shell relative overflow-hidden bg-gradient-to-b from-white via-bg to-bg py-20 md:py-28 px-4">
+      <section className="hero-shell relative overflow-hidden bg-gradient-to-b from-white via-bg to-bg py-16 md:py-24 px-4">
         <div className="hero-ambient" />
         <span className="floating-tool left-[6%] top-20 hidden md:inline-flex">PDF</span>
         <span className="floating-tool right-[8%] top-24 hidden md:inline-flex" style={{ animationDelay: '1.1s' }}>Photo 50KB</span>
@@ -46,7 +46,7 @@ export default function HomePage() {
 
           <h1 className="motion-reveal motion-delay-1 text-4xl md:text-6xl font-semibold text-primary tracking-tight leading-tight mb-6">
             Free PDF, Image &{' '}
-            <span className="font-serif italic text-accent">Document Tools</span>
+            <span className="hero-emphasis font-serif italic text-accent">Document Tools</span>
             {' '}for India
           </h1>
 
@@ -62,6 +62,27 @@ export default function HomePage() {
             <a href="/tools/image-resize/" className="btn-secondary px-6 py-3 text-base">
               Resize Image
             </a>
+          </div>
+
+          <div className="hero-flow motion-reveal motion-delay-4 mx-auto mb-10 max-w-3xl" aria-hidden="true">
+            <div className="flow-lane">
+              {[
+                { icon: Upload, label: 'Pick file', detail: 'local only' },
+                { icon: Sparkles, label: 'Auto fix', detail: 'size ready' },
+                { icon: Download, label: 'Download', detail: 'instant PDF' },
+              ].map(({ icon: Icon, label, detail }, index) => (
+                <div key={label} className="motion-file-card" style={{ animationDelay: `${index * 0.35}s` }}>
+                  <div className="motion-file-icon">
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0 text-left">
+                    <p className="text-xs font-semibold text-primary">{label}</p>
+                    <p className="text-[10px] font-medium text-secondary">{detail}</p>
+                  </div>
+                  <div className="mini-progress" />
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="motion-stagger flex flex-wrap items-center justify-center gap-3">
