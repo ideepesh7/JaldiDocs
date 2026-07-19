@@ -1,13 +1,15 @@
 // src/components/ui/ToolCard.tsx
 import {
   Maximize2, Minimize2, UserSquare2, Receipt, FileImage, Combine,
-  FileDown, Pen, CreditCard, IdCard, Home, ArrowRight
+  FileDown, Pen, CreditCard, IdCard, Home, ArrowRight, CalendarDays,
+  Percent, FileText, CaseSensitive, IndianRupee
 } from 'lucide-react';
 import type { Tool } from '../../data/tools';
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Maximize2, Minimize2, UserSquare2, Receipt, FileImage, Combine,
-  FileDown, Pen, CreditCard, IdCard, Home,
+  FileDown, Pen, CreditCard, IdCard, Home, CalendarDays, Percent,
+  FileText, CaseSensitive, IndianRupee,
 };
 
 const CATEGORY_STYLES = {

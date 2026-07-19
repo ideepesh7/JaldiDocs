@@ -11,6 +11,10 @@ const staticPaths = [
   '/privacy/',
   '/terms/',
   '/disclaimer/',
+  '/guides/passport-photo-size-india/',
+  '/guides/signature-size-for-exam-form/',
+  '/guides/pdf-size-reduce-under-500kb/',
+  '/guides/hra-rent-receipt-guide/',
 ];
 
 const normalizePath = (path: string) => {

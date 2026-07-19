@@ -1,0 +1,51 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import ToolHeader from '../../components/ui/ToolHeader';
+import PercentageCalculator from '../../components/tools/PercentageCalculator';
+import FAQSection from '../../components/ui/FAQSection';
+import RelatedTools from '../../components/ui/RelatedTools';
+import AdSlot from '../../components/ui/AdSlot';
+import { getRelatedTools } from '../../lib/relatedTools';
+
+const faqs = [
+  { question: 'How do I calculate marks percentage?', answer: 'Enter marks obtained and total marks. The calculator divides obtained marks by total marks and multiplies by 100.' },
+  { question: 'Can I calculate discounts and price changes?', answer: 'Yes. Use the increase/decrease section with old and new values to calculate percentage change.' },
+  { question: 'Are results rounded?', answer: 'Results are displayed up to two decimal places for readability.' },
+];
+
+const relatedTools = getRelatedTools('percentage-calculator');
+---
+
+<ToolLayout
+  title="Percentage Calculator Online - Marks, Increase, Discount | JaldiDocs"
+  description="Free percentage calculator for marks, ratios, percentage increase and decrease. Useful for students, shopping, business and finance calculations."
+  canonical="/tools/percentage-calculator/"
+>
+  <ToolHeader
+    client:load
+    name="Percentage Calculator"
+    description="Calculate marks percentage, what percent one number is of another, and percentage increase or decrease instantly."
+    breadcrumb={[{ label: 'Student Tools', href: '/#student-tools' }, { label: 'Percentage Calculator', href: '/tools/percentage-calculator/' }]}
+  />
+
+  <PercentageCalculator client:load />
+
+  <div slot="seo-content">
+    <AdSlot client:load className="mb-10" />
+    <div class="prose-tool mt-4">
+      <h2>Percentage calculator for marks and everyday math</h2>
+      <p>
+        Percentages appear in exam results, discounts, salary changes, business margins and loan comparisons.
+        This calculator keeps the most common percentage formulas together so you do not need a spreadsheet.
+      </p>
+      <h2>Formulas used</h2>
+      <ul>
+        <li>Marks percentage = marks obtained / total marks x 100</li>
+        <li>Part of whole = part / whole x 100</li>
+        <li>Percentage change = new value - old value, divided by old value, x 100</li>
+      </ul>
+    </div>
+    <FAQSection client:load faqs={faqs} title="Percentage Calculator FAQs" />
+    <RelatedTools client:load tools={relatedTools} currentId="percentage-calculator" />
+  </div>
+</ToolLayout>

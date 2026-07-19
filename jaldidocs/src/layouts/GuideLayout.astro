@@ -1,0 +1,26 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
+
+export interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+}
+
+const { title, description, canonical } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}>
+  <Navbar client:load />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <nav class="flex items-center gap-1.5 text-xs text-gray-400 mb-6">
+      <a href="/" class="hover:text-gray-600 transition-colors">Home</a>
+      <span>/</span>
+      <span class="text-gray-700 font-medium">Guides</span>
+    </nav>
+    <slot />
+  </main>
+  <Footer client:load />
+</BaseLayout>

@@ -11,7 +11,12 @@ const relatedPriority: Record<string, string[]> = {
   'merge-pdf': ['jpg-to-pdf', 'pdf-compressor', 'image-compress', 'invoice-maker'],
   'pdf-compressor': ['merge-pdf', 'jpg-to-pdf', 'image-compress', 'image-resize'],
   'invoice-maker': ['rent-receipt-generator', 'pdf-compressor', 'merge-pdf', 'jpg-to-pdf'],
-  'rent-receipt-generator': ['invoice-maker', 'pdf-compressor', 'merge-pdf', 'jpg-to-pdf'],
+  'rent-receipt-generator': ['hra-calculator', 'invoice-maker', 'pdf-compressor', 'merge-pdf'],
+  'hra-calculator': ['rent-receipt-generator', 'invoice-maker', 'percentage-calculator', 'age-calculator'],
+  'age-calculator': ['percentage-calculator', 'word-counter', 'case-converter', 'signature-resize'],
+  'percentage-calculator': ['age-calculator', 'hra-calculator', 'word-counter', 'case-converter'],
+  'word-counter': ['case-converter', 'percentage-calculator', 'age-calculator', 'pdf-compressor'],
+  'case-converter': ['word-counter', 'percentage-calculator', 'age-calculator', 'jpg-to-pdf'],
 };
 
 function isTool(tool: Tool | undefined): tool is Tool {

@@ -1,0 +1,54 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import ToolHeader from '../../components/ui/ToolHeader';
+import AgeCalculator from '../../components/tools/AgeCalculator';
+import FAQSection from '../../components/ui/FAQSection';
+import RelatedTools from '../../components/ui/RelatedTools';
+import AdSlot from '../../components/ui/AdSlot';
+import { getRelatedTools } from '../../lib/relatedTools';
+
+const faqs = [
+  { question: 'Can I calculate age for an exam form cutoff date?', answer: 'Yes. Enter your date of birth and set the age-on date to the cutoff date mentioned in the official notification.' },
+  { question: 'Does this tool store my date of birth?', answer: 'No. The calculation runs in your browser and the dates are not uploaded or stored on JaldiDocs.' },
+  { question: 'Why do some portals ask age on a specific date?', answer: 'Schools, jobs and exam boards often use a fixed eligibility date so every applicant is checked with the same rule.' },
+];
+
+const relatedTools = getRelatedTools('age-calculator');
+---
+
+<ToolLayout
+  title="Age Calculator Online - Exact Age for Forms | JaldiDocs"
+  description="Calculate exact age in years, months and days for school, exam, job and government forms. Free browser-based age calculator with no signup."
+  canonical="/tools/age-calculator/"
+>
+  <ToolHeader
+    client:load
+    name="Age Calculator"
+    description="Calculate exact age from date of birth to today or any cutoff date. Useful for school admissions, government exams, jobs and official forms."
+    breadcrumb={[{ label: 'Student Tools', href: '/#student-tools' }, { label: 'Age Calculator', href: '/tools/age-calculator/' }]}
+  />
+
+  <AgeCalculator client:load />
+
+  <div slot="seo-content">
+    <AdSlot client:load className="mb-10" />
+    <div class="prose-tool mt-4">
+      <h2>Exact age calculator for Indian forms</h2>
+      <p>
+        Many Indian forms ask for age on a specific cutoff date instead of age today. This tool helps you
+        calculate the exact years, months and days between your date of birth and any target date.
+      </p>
+      <h2>Common uses</h2>
+      <ul>
+        <li>School admission age checks</li>
+        <li>SSC, UPSC, railway and state exam eligibility</li>
+        <li>Job application age limits</li>
+        <li>Insurance, pension and service records</li>
+      </ul>
+      <h2>Tip</h2>
+      <p>Always use the exact cutoff date written in the official notification, not the application submission date.</p>
+    </div>
+    <FAQSection client:load faqs={faqs} title="Age Calculator FAQs" />
+    <RelatedTools client:load tools={relatedTools} currentId="age-calculator" />
+  </div>
+</ToolLayout>

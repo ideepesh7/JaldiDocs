@@ -1,0 +1,30 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+---
+
+<GuideLayout
+  title="Reduce PDF Size Under 500KB - Practical Guide | JaldiDocs"
+  description="Learn practical ways to reduce PDF size under 500KB for Indian portals, forms and document uploads."
+  canonical="/guides/pdf-size-reduce-under-500kb/"
+>
+  <article class="prose-tool space-y-7">
+    <h1>How to Reduce PDF Size Under 500KB</h1>
+    <p>
+      Many portals reject PDFs larger than 500KB or 1MB. The best method depends on whether your PDF is
+      text-based, image-heavy or scanned from photos.
+    </p>
+    <h2>What works best</h2>
+    <ul>
+      <li>For text PDFs, structural optimization can reduce size without visible quality loss.</li>
+      <li>For scanned PDFs, compress the images before converting them to PDF.</li>
+      <li>Remove duplicate pages or blank pages before upload.</li>
+      <li>Use black-and-white scanning for simple documents when color is not required.</li>
+    </ul>
+    <h2>Suggested workflow</h2>
+    <ol>
+      <li>Compress images first using <a href="/tools/image-compress/">Image Compress</a>.</li>
+      <li>Create the PDF using <a href="/tools/jpg-to-pdf/">JPG to PDF</a>.</li>
+      <li>Try <a href="/tools/pdf-compressor/">PDF Compressor</a> for final optimization.</li>
+    </ol>
+  </article>
+</GuideLayout>

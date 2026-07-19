@@ -1,0 +1,54 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import ToolHeader from '../../components/ui/ToolHeader';
+import HraCalculator from '../../components/tools/HraCalculator';
+import FAQSection from '../../components/ui/FAQSection';
+import RelatedTools from '../../components/ui/RelatedTools';
+import AdSlot from '../../components/ui/AdSlot';
+import { getRelatedTools } from '../../lib/relatedTools';
+
+const faqs = [
+  { question: 'Is this HRA calculator tax advice?', answer: 'No. It is an estimate for planning. Confirm your final tax treatment with your employer, Form 16, tax portal or a qualified professional.' },
+  { question: 'Which cities count as metro for HRA?', answer: 'For the common HRA formula, Delhi, Mumbai, Kolkata and Chennai use 50% of salary. Other cities use 40%.' },
+  { question: 'Do I need rent receipts?', answer: 'Employers usually ask for rent receipts, and landlord PAN may be required when annual rent crosses specified limits. Check current employer and tax rules.' },
+];
+
+const relatedTools = getRelatedTools('hra-calculator');
+---
+
+<ToolLayout
+  title="HRA Calculator Online India - House Rent Allowance Exemption | JaldiDocs"
+  description="Estimate HRA exemption in India using salary, HRA received, rent paid and metro or non-metro city rules. Free planning calculator."
+  canonical="/tools/hra-calculator/"
+>
+  <ToolHeader
+    client:load
+    name="HRA Calculator"
+    description="Estimate annual HRA exemption using monthly salary, HRA received, rent paid and city type. Built for quick Indian salary planning."
+    breadcrumb={[{ label: 'Business Tools', href: '/#business-tools' }, { label: 'HRA Calculator', href: '/tools/hra-calculator/' }]}
+  />
+
+  <HraCalculator client:load />
+
+  <div slot="seo-content">
+    <AdSlot client:load className="mb-10" />
+    <div class="prose-tool mt-4">
+      <h2>HRA exemption estimate for India</h2>
+      <p>
+        House Rent Allowance can reduce taxable salary for eligible salaried taxpayers under the old tax
+        regime. The exempt amount is usually the least of actual HRA received, a percentage of salary, and
+        rent paid minus 10% of salary.
+      </p>
+      <h2>Documents often needed</h2>
+      <ul>
+        <li>Rent receipts for the relevant months</li>
+        <li>Rental agreement if your employer asks for it</li>
+        <li>Landlord PAN when rent crosses applicable limits</li>
+        <li>Salary breakup showing basic salary, DA and HRA</li>
+      </ul>
+      <p>Use this as a planning estimate only. Tax rules and employer requirements can change.</p>
+    </div>
+    <FAQSection client:load faqs={faqs} title="HRA Calculator FAQs" />
+    <RelatedTools client:load tools={relatedTools} currentId="hra-calculator" />
+  </div>
+</ToolLayout>

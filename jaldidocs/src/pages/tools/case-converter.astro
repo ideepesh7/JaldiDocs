@@ -1,0 +1,52 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import ToolHeader from '../../components/ui/ToolHeader';
+import CaseConverter from '../../components/tools/CaseConverter';
+import FAQSection from '../../components/ui/FAQSection';
+import RelatedTools from '../../components/ui/RelatedTools';
+import AdSlot from '../../components/ui/AdSlot';
+import { getRelatedTools } from '../../lib/relatedTools';
+
+const faqs = [
+  { question: 'Can I convert names and headings to title case?', answer: 'Yes. Paste your text and copy the Title Case output.' },
+  { question: 'Does this tool work offline after loading?', answer: 'The conversion logic runs in your browser, so it does not need to send text to a server.' },
+  { question: 'What does clean spaces do?', answer: 'It removes extra spaces and line breaks, turning messy copied text into one clean line.' },
+];
+
+const relatedTools = getRelatedTools('case-converter');
+---
+
+<ToolLayout
+  title="Case Converter Online - Uppercase, Lowercase, Title Case | JaldiDocs"
+  description="Convert text to uppercase, lowercase, title case, sentence case and clean spaces online. Free browser-based text case converter."
+  canonical="/tools/case-converter/"
+>
+  <ToolHeader
+    client:load
+    name="Case Converter"
+    description="Convert text to uppercase, lowercase, title case, sentence case and clean extra spaces instantly."
+    breadcrumb={[{ label: 'Student Tools', href: '/#student-tools' }, { label: 'Case Converter', href: '/tools/case-converter/' }]}
+  />
+
+  <CaseConverter client:load />
+
+  <div slot="seo-content">
+    <AdSlot client:load className="mb-10" />
+    <div class="prose-tool mt-4">
+      <h2>Clean and convert text instantly</h2>
+      <p>
+        Case Converter is useful when copied text arrives in the wrong format. You can quickly create clean
+        headings, normalize form text, fix all-caps content or prepare short descriptions.
+      </p>
+      <h2>Common uses</h2>
+      <ul>
+        <li>Convert names, headings and titles</li>
+        <li>Clean pasted text from PDFs or forms</li>
+        <li>Prepare social captions and product descriptions</li>
+        <li>Fix accidental caps lock typing</li>
+      </ul>
+    </div>
+    <FAQSection client:load faqs={faqs} title="Case Converter FAQs" />
+    <RelatedTools client:load tools={relatedTools} currentId="case-converter" />
+  </div>
+</ToolLayout>

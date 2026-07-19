@@ -7,6 +7,7 @@ const navLinks = [
   { label: 'Image Tools', href: '/#image-tools' },
   { label: 'Business Tools', href: '/#business-tools' },
   { label: 'Student Tools', href: '/#student-tools' },
+  { label: 'Calculators', href: '/tools/percentage-calculator/' },
   { label: 'Privacy', href: '/privacy/' },
 ];
 

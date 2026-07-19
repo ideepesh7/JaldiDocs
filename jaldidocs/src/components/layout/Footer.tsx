@@ -20,6 +20,14 @@ const footerLinks = {
   'Student Tools': [
     { label: 'Aadhaar Photo Resize', href: '/tools/aadhaar-photo-resize/' },
     { label: 'PAN Card Photo', href: '/tools/pan-card-photo-resize/' },
+    { label: 'Age Calculator', href: '/tools/age-calculator/' },
+    { label: 'Percentage Calculator', href: '/tools/percentage-calculator/' },
+  ],
+  'Guides': [
+    { label: 'Passport Photo Size', href: '/guides/passport-photo-size-india/' },
+    { label: 'Signature Size', href: '/guides/signature-size-for-exam-form/' },
+    { label: 'Reduce PDF Size', href: '/guides/pdf-size-reduce-under-500kb/' },
+    { label: 'HRA & Rent Receipts', href: '/guides/hra-rent-receipt-guide/' },
   ],
   'Company': [
     { label: 'About', href: '/about/' },
@@ -54,7 +62,7 @@ export default function Footer() {
         </div>
 
         {/* Links grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8">
           {Object.entries(footerLinks).map(([group, links]) => (
             <div key={group}>
               <h3 className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">
