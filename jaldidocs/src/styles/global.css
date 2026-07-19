@@ -346,6 +346,9 @@ a:hover .brand-mark {
 
 .hero-shell {
   isolation: isolate;
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
 }
 
 .hero-ambient {
@@ -379,6 +382,74 @@ a:hover .brand-mark {
   animation: heroGradient 5.5s ease-in-out infinite;
 }
 
+.hero-grid {
+  width: 100%;
+}
+
+.hero-stage {
+  position: relative;
+  min-height: clamp(430px, 55vw, 650px);
+  perspective: 1200px;
+}
+
+.hero-stage::before {
+  content: '';
+  position: absolute;
+  inset: 9% 4% 4%;
+  border: 1px solid rgba(37, 99, 235, 0.12);
+  border-radius: 34px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.58), rgba(238,242,255,0.36)),
+    radial-gradient(circle at 35% 20%, rgba(16,185,129,0.16), transparent 34%),
+    radial-gradient(circle at 70% 70%, rgba(37,99,235,0.18), transparent 36%);
+  box-shadow: 0 35px 90px rgba(17, 24, 39, 0.12);
+  transform: rotateX(5deg) rotateY(-7deg);
+}
+
+.hero-3d-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.hero-3d-scene canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-3d-fallback {
+  position: absolute;
+  inset: 18% 16%;
+  transform-style: preserve-3d;
+  animation: cardFloat 3.6s ease-in-out infinite;
+}
+
+.fallback-doc {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(37, 99, 235, 0.16);
+  border-radius: 24px;
+  background: linear-gradient(150deg, #fff, #eef2ff);
+  box-shadow: 0 25px 60px rgba(17, 24, 39, 0.12);
+}
+
+.fallback-doc-a {
+  transform: translate3d(-34px, 22px, 0) rotate(-12deg);
+}
+
+.fallback-doc-b {
+  transform: translate3d(26px, -10px, 40px) rotate(5deg);
+}
+
+.fallback-doc-c {
+  transform: translate3d(72px, 42px, 80px) rotate(14deg);
+}
+
+.hero-3d-scene canvas + .hero-3d-fallback {
+  display: none;
+}
+
 .floating-tool {
   position: absolute;
   display: inline-flex;
@@ -403,6 +474,16 @@ a:hover .brand-mark {
   box-shadow: 0 18px 50px rgba(17, 24, 39, 0.08);
   padding: 12px;
   overflow: hidden;
+}
+
+.hero-flow-overlay {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  bottom: 6%;
+  z-index: 3;
+  margin: 0;
+  backdrop-filter: blur(16px);
 }
 
 .hero-flow::before {
@@ -589,6 +670,28 @@ a:hover .brand-mark {
 }
 
 @media (max-width: 640px) {
+  .hero-shell {
+    min-height: auto;
+    align-items: flex-start;
+  }
+
+  .hero-stage {
+    min-height: 390px;
+    margin-top: 4px;
+  }
+
+  .hero-stage::before {
+    inset: 3% 0 8%;
+    border-radius: 24px;
+    transform: rotateX(3deg) rotateY(-3deg);
+  }
+
+  .hero-flow-overlay {
+    left: 2%;
+    right: 2%;
+    bottom: 2%;
+  }
+
   .floating-tool {
     display: none;
   }
@@ -614,5 +717,11 @@ a:hover .brand-mark {
 
   .motion-file-card {
     min-height: 64px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-flow-overlay .motion-file-card {
+    min-height: 76px;
   }
 }

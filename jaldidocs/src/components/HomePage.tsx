@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { TOOLS, CATEGORIES } from '../data/tools';
 import { HOME_FAQS } from '../data/faqs';
+import Hero3DScene from './Hero3DScene';
 import ToolCard from './ui/ToolCard';
 import FAQSection from './ui/FAQSection';
 import AdSlot from './ui/AdSlot';
@@ -31,72 +32,77 @@ export default function HomePage() {
 
   return (
     <main>
-      <section className="hero-shell relative overflow-hidden bg-gradient-to-b from-white via-bg to-bg py-16 md:py-24 px-4">
+      <section className="hero-shell relative overflow-hidden bg-gradient-to-b from-white via-bg to-bg px-4 py-10 md:py-16">
         <div className="hero-ambient" />
         <span className="floating-tool left-[6%] top-20 hidden md:inline-flex">PDF</span>
         <span className="floating-tool right-[8%] top-24 hidden md:inline-flex" style={{ animationDelay: '1.1s' }}>Photo 50KB</span>
         <span className="floating-tool left-[12%] bottom-20 hidden lg:inline-flex" style={{ animationDelay: '2s' }}>Invoice</span>
         <span className="floating-tool right-[14%] bottom-24 hidden lg:inline-flex" style={{ animationDelay: '3s' }}>HRA</span>
 
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="motion-pop inline-flex items-center gap-2 bg-white border border-border rounded-full px-4 py-1.5 text-xs font-medium text-secondary mb-6 shadow-sm">
-            <Zap className="w-3.5 h-3.5 text-accent" />
-            Free browser-based tools - no upload, no signup
-          </div>
+        <div className="hero-grid relative z-10 mx-auto grid max-w-7xl items-center gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="text-center lg:text-left">
+            <div className="motion-pop inline-flex items-center gap-2 bg-white border border-border rounded-full px-4 py-1.5 text-xs font-medium text-secondary mb-6 shadow-sm">
+              <Zap className="w-3.5 h-3.5 text-accent" />
+              Free browser-based tools - no upload, no signup
+            </div>
 
-          <h1 className="motion-reveal motion-delay-1 text-4xl md:text-6xl font-semibold text-primary tracking-tight leading-tight mb-6">
-            Free PDF, Image &{' '}
-            <span className="hero-emphasis font-serif italic text-accent">Document Tools</span>
-            {' '}for India
-          </h1>
+            <h1 className="motion-reveal motion-delay-1 text-4xl md:text-6xl xl:text-7xl font-semibold text-primary tracking-tight leading-tight mb-6">
+              Free PDF, Image &{' '}
+              <span className="hero-emphasis font-serif italic text-accent">Document Tools</span>
+              {' '}for India
+            </h1>
 
-          <p className="motion-reveal motion-delay-2 text-lg md:text-xl text-secondary leading-relaxed max-w-2xl mx-auto mb-8">
-            Compress, resize, convert and create everyday documents directly in your browser.
-            No signup. No upload. No cost.
-          </p>
+            <p className="motion-reveal motion-delay-2 text-lg md:text-xl text-secondary leading-relaxed max-w-2xl mx-auto lg:mx-0 mb-8">
+              Compress, resize, convert and create everyday documents directly in your browser.
+              No signup. No upload. No cost.
+            </p>
 
-          <div className="motion-reveal motion-delay-3 flex flex-wrap items-center justify-center gap-3 mb-10">
-            <a href="#all-tools" className="btn-primary px-6 py-3 text-base">
-              Explore Tools <ArrowRight className="w-4 h-4" />
-            </a>
-            <a href="/tools/image-resize/" className="btn-secondary px-6 py-3 text-base">
-              Resize Image
-            </a>
-          </div>
+            <div className="motion-reveal motion-delay-3 flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-8">
+              <a href="#all-tools" className="btn-primary px-6 py-3 text-base">
+                Explore Tools <ArrowRight className="w-4 h-4" />
+              </a>
+              <a href="/tools/image-resize/" className="btn-secondary px-6 py-3 text-base">
+                Resize Image
+              </a>
+            </div>
 
-          <div className="hero-flow motion-reveal motion-delay-4 mx-auto mb-10 max-w-3xl" aria-hidden="true">
-            <div className="flow-lane">
+            <div className="motion-stagger flex flex-wrap items-center justify-center lg:justify-start gap-3">
               {[
-                { icon: Upload, label: 'Pick file', detail: 'local only' },
-                { icon: Sparkles, label: 'Auto fix', detail: 'size ready' },
-                { icon: Download, label: 'Download', detail: 'instant PDF' },
-              ].map(({ icon: Icon, label, detail }, index) => (
-                <div key={label} className="motion-file-card" style={{ animationDelay: `${index * 0.35}s` }}>
-                  <div className="motion-file-icon">
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0 text-left">
-                    <p className="text-xs font-semibold text-primary">{label}</p>
-                    <p className="text-[10px] font-medium text-secondary">{detail}</p>
-                  </div>
-                  <div className="mini-progress" />
+                { icon: Users, label: 'No Signup Required' },
+                { icon: Shield, label: 'Browser-based' },
+                { icon: Star, label: 'Free to Use' },
+                { icon: Lock, label: 'Privacy-first' },
+              ].map(({ icon: Icon, label }) => (
+                <div key={label} className="trust-pill flex items-center gap-1.5 bg-white border border-border rounded-full px-3.5 py-1.5 text-xs font-medium text-secondary shadow-sm">
+                  <Icon className="w-3.5 h-3.5 text-success" />
+                  {label}
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="motion-stagger flex flex-wrap items-center justify-center gap-3">
-            {[
-              { icon: Users, label: 'No Signup Required' },
-              { icon: Shield, label: 'Browser-based' },
-              { icon: Star, label: 'Free to Use' },
-              { icon: Lock, label: 'Privacy-first' },
-            ].map(({ icon: Icon, label }) => (
-              <div key={label} className="trust-pill flex items-center gap-1.5 bg-white border border-border rounded-full px-3.5 py-1.5 text-xs font-medium text-secondary shadow-sm">
-                <Icon className="w-3.5 h-3.5 text-success" />
-                {label}
+          <div className="hero-stage motion-reveal motion-delay-3">
+            <Hero3DScene />
+            <div className="hero-flow hero-flow-overlay" aria-hidden="true">
+              <div className="flow-lane">
+                {[
+                  { icon: Upload, label: 'Pick file', detail: 'local only' },
+                  { icon: Sparkles, label: 'Auto fix', detail: 'size ready' },
+                  { icon: Download, label: 'Download', detail: 'instant PDF' },
+                ].map(({ icon: Icon, label, detail }, index) => (
+                  <div key={label} className="motion-file-card" style={{ animationDelay: `${index * 0.35}s` }}>
+                    <div className="motion-file-icon">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0 text-left">
+                      <p className="text-xs font-semibold text-primary">{label}</p>
+                      <p className="text-[10px] font-medium text-secondary">{detail}</p>
+                    </div>
+                    <div className="mini-progress" />
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
